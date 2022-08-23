@@ -21,6 +21,7 @@
 #define DIREITA 'D'
 #define CONVERSORASCII 64
 #define VIDAS 3
+#define BOMBAS 3
 
 
 void telaInicial()
@@ -38,7 +39,7 @@ void telaInicial()
 
 bool novoJogo(Jogo *jogo)
 {
-    int linha, coluna, criatura, monstro;
+    int linha, coluna, criatura, monstro, bomba;
     char peca;
 
     criatura = monstro = 0;
@@ -63,6 +64,10 @@ bool novoJogo(Jogo *jogo)
                 jogo->mago.pontos = 0;
                 jogo->mago.vidas = VIDAS;
                 jogo->mago.color = PURPLE;
+                jogo->mago.direcaoAtual = DIREITA;
+                jogo->mago.quantidadeBombas = BOMBAS;
+                for(bomba=0; bomba < BOMBAS; bomba++)
+                    jogo->mago.bombas[bomba].ativa = false;
                 break;
             case CRIATURA:
                 jogo->mapa.criaturas[criatura].xInicial = jogo->mapa.criaturas[criatura].x = coluna;

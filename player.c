@@ -11,6 +11,7 @@
 #define MAGO 'J'
 #define MONSTRO 'M'
 #define CRIATURA 'K'
+#define BOMBA 'B'
 #define POCAOCOLETADA 50
 #define MONSTRODESTRUIDO 100
 #define OBSTACULODESTRUIDO 10
@@ -18,6 +19,10 @@
 #define NOVAVIDA 1000
 #define VIDAS 3
 #define CRIATURACOLETADA 10
+#define CIMA 'C'
+#define BAIXO 'B'
+#define ESQUERDA 'E'
+#define DIREITA 'D'
 
 
 void movimentoPersonagem(Player *mago, char terreno[][MAPAX])
@@ -27,21 +32,25 @@ void movimentoPersonagem(Player *mago, char terreno[][MAPAX])
     {
         destino[0] = mago->x + 1;
         destino[1] = mago->y;
+        mago->direcaoAtual = DIREITA;
     }
     if (IsKeyPressed(KEY_LEFT))
     {
         destino[0] = mago->x - 1;
         destino[1] = mago->y;
+        mago->direcaoAtual = ESQUERDA;
     }
     if (IsKeyPressed(KEY_UP))
     {
         destino[0] = mago->x;
         destino[1] = mago->y - 1;
+        mago->direcaoAtual = CIMA;
     }
     if (IsKeyPressed(KEY_DOWN))
     {
         destino[0] = mago->x;
         destino[1] = mago->y + 1;
+        mago->direcaoAtual = BAIXO;
     }
     movimentar(mago, terreno, destino);
 }
@@ -111,3 +120,44 @@ bool verificarPocao(Player mago, char terreno[][MAPAX])
 
     return false;
 }
+
+
+void colocarBomba(Player *mago, char terreno[][MAPAX])
+{
+    int bomba, destino[2] = { 0 };
+
+    switch(mago->direcaoAtual)
+    {
+    case CIMA:
+        destino[0] = mago->x;
+        destino[1] = mago->y - 1;
+        break;
+    case BAIXO:
+        destino[0] = mago->x;
+        destino[1] = mago->y + 1;
+        break;
+    case ESQUERDA:
+        destino[0] = mago->x - 1;
+        destino[1] = mago->y;
+        break;
+    case DIREITA:
+        destino[0] = mago->x + 1;
+        destino[1] = mago->y;
+        break;
+    }
+    if(mago->quantidadeBombas > 0)
+    {
+        bomba = BOMBA - mago->quantidadeBombas;
+        if(movimentoPossivel(terreno,destino))
+        {
+            mago->quantidadeBombas -= 1;
+            mago->bombas[bomba].x = destino[0];
+            mago->bombas[bomba].y = destino[1];
+            mago->bombas[bomba].ativa = true;
+            terreno[destino[1]][destino[0]] = BOMBA;
+        }
+    }
+
+}
+
+

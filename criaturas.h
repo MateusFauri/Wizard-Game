@@ -24,10 +24,28 @@ typedef struct{
 // Description: Modificar o estado da criatura para pega.
 void criaturaColetada(Criatura *criatura);
 
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 bool todasCriaturasColetadas(Criatura criatura[], int tamanho);
 
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void resetarCriatura(Criatura *criatura);
 
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void movimentarCriatura(Criatura *criatura, char terreno[][MAPAX]);
 
 

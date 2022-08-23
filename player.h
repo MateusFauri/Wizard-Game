@@ -1,28 +1,85 @@
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 
-#include "raylib.h"
 #include "mapa.h"
+#include "bomba.h"
 
 #define MAPAX 27
+#define BOMBAS 3
 
 typedef struct{
-    int pontos;
-    int vidas;
-    int x;
-    int y;
-    int xInicial;
-    int yInicial;
+    int pontos, vidas, quantidadeBombas;
+    int x, y;
+    int xInicial,yInicial;
+    char direcaoAtual;
     Color color;
+    Bomba bombas[BOMBAS];
 }Player;
 
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void movimentoPersonagem(Player *mago, char terreno[][MAPAX]);
+
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void movimentar(Player *mago, char terreno[][MAPAX], int destino[]);
+
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void aumentarPontuacao(Player *mago, int ponto);
+
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void resetarPersonagem(Player *mago);
+
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void perderVida(Player *mago);
+
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 bool verificarCriatura(Player mago, Criatura criatura);
+
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 bool verificarMonstro(Player mago, Monstro monstro);
+
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 bool verificarPocao(Player mago, char terreno[][MAPAX]);
+
+void colocarBomba(Player *mago, char terreno[][MAPAX]);
 
 #endif // PLAYER_H_INCLUDED

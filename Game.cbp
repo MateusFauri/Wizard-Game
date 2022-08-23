@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="bomba.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="bomba.h" />
 		<Unit filename="criaturas.c">
 			<Option compilerVar="CC" />
 		</Unit>

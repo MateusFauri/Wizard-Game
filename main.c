@@ -29,6 +29,9 @@
 #define NOVAVIDA 1000
 #define VIDAS 3
 #define TEMPO 60
+#define B 66
+#define TAB 9
+#define TEMPOBOMBA 3
 
 static int framesCounter = 0;
 static Jogo jogo;
@@ -57,6 +60,8 @@ int main(void){
                 movimentarCriatura( &jogo.mapa.criaturas[criatura], jogo.mapa.terreno);
             for(monstro = 0; monstro < jogo.mapa.numeroMonstros; monstro++)
                 movimentarMonstro( &jogo.mapa.monstros[monstro], jogo.mapa.terreno);
+            //if(framesCounter % (TEMPO * TEMPOBOMBA) == 0 )
+            //      explodirBomba()
         }
 
         for(criatura = 0; criatura < jogo.mapa.numeroCriaturas; criatura++)
@@ -87,6 +92,9 @@ int main(void){
             }
         }
 
+        if(GetKeyPressed() == B)
+            colocarBomba(&jogo.mago, jogo.mapa.terreno);
+
         desenhar(&jogo);
         movimentoPersonagem(&jogo.mago, jogo.mapa.terreno);
 
@@ -99,7 +107,7 @@ int main(void){
 
 void desenhar(Jogo *jogo)
 {
-    int linha, coluna, posicaoX, posicaoY, criatura, monstro;
+    int linha, coluna, posicaoX, posicaoY, criatura, monstro, bomba;
     char caracter;
 
     BeginDrawing();
@@ -131,7 +139,15 @@ void desenhar(Jogo *jogo)
                 }
             }
 
-            DrawRectangle(jogo->mago.x * PASSO, jogo->mago.y * PASSO, PASSO, PASSO, PURPLE);
+            DrawRectangle(jogo->mago.x * PASSO, jogo->mago.y * PASSO, PASSO, PASSO, jogo->mago.color);
+
+            for(bomba = 0; bomba < BOMBAS; bomba++)
+            {
+                if(jogo->mago.bombas[bomba].ativa)
+                {
+                    DrawRectangle(jogo->mago.bombas[bomba].x * PASSO, jogo->mago.bombas[bomba].y * PASSO, PASSO, PASSO, YELLOW);
+                }
+            }
 
 
             for(criatura = 0; criatura < jogo->mapa.numeroCriaturas; criatura++)
@@ -151,6 +167,7 @@ void desenhar(Jogo *jogo)
 
             DrawText(TextFormat("Vidas: %i", jogo->mago.vidas), 10, 0, 20, LIGHTGRAY);
             DrawText(TextFormat("Pontos: %i", jogo->mago.pontos), 140, 0, 20, LIGHTGRAY);
+            DrawText(TextFormat("Bombas: %i", jogo->mago.quantidadeBombas), 300, 0, 20, LIGHTGRAY);
         }
 
     EndDrawing();

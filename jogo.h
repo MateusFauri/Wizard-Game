@@ -30,6 +30,12 @@ bool novoJogo(Jogo *jogo);
 // Description:
 void passarFase();
 
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
 void resetarMapa(Player *mago, Mapa *mapa);
 
 

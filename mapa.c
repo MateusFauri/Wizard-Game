@@ -9,6 +9,7 @@
 #define MAGO 'J'
 #define MONSTRO 'M'
 #define CRIATURA 'K'
+#define BOMBA 'B'
 #define CIMA 'C'
 #define BAIXO 'B'
 #define ESQUERDA 'E'
@@ -50,7 +51,7 @@ bool lerMapa(Mapa *mapa)
 bool movimentoPossivel(char terreno[][COLUNAS], int destino[])
 {
     int x,y;
-    bool limitesX, limitesY, parede;
+    bool limitesX, limitesY, parede, bomba;
 
     x = destino[0];
     y = destino[1];
@@ -58,8 +59,9 @@ bool movimentoPossivel(char terreno[][COLUNAS], int destino[])
     limitesX = x >= 0 && x < COLUNAS;
     limitesY = y >= 0 && y < LINHAS;
     parede = terreno[y][x] == PAREDE || terreno[y][x] == PAREDEDESTRUTIVEL;
+    bomba = terreno[y][x] == BOMBA;
 
-    if(!limitesX || !limitesY || parede)
+    if(!limitesX || !limitesY || parede || bomba)
         return false;
 
     return true;
