@@ -45,7 +45,6 @@ bool novoJogo(Jogo *jogo)
     criatura = monstro = 0;
 
     jogo->fase = 1;
-    jogo->telaInicial = false;
 
     if(!lerMapa(&(jogo->mapa)))
         return false;

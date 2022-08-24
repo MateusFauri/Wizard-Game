@@ -6,7 +6,7 @@
 
 typedef struct{
     int fase;
-    bool telaInicial;
+    char tela;
     Mapa mapa;
     Player mago;
 }Jogo;

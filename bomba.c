@@ -1,8 +1,8 @@
 #include "bomba.h"
 #include <math.h>
 
-#define ALCANCEMAXIMO (RAIOBOMBA+RAIOBOMBA+1)*(RAIOBOMBA+RAIOBOMBA+1)
-#define ALCANCEMEDIO1 ()
+#define TEMPOBOMBA 3
+
 
 bool verificarExplosao(Bomba bomba, double tempo)
 {
@@ -11,13 +11,13 @@ bool verificarExplosao(Bomba bomba, double tempo)
     return false;
 }
 
-
+/*
 void explodir(Bomba *bomba, Mapa *mapa)
 {
     int quadradosAtingidos;
 
-    if(bomba.x >= RAIOBOMBA && bomba.x <= LINHAS - RAIOBOMBA)
-        if(bomba.y >= RAIOBOMBA && bomba.y <= COLUNAS - RAIOBOMBA)
+    if(bomba.x >= RAIOBOMBA && bomba->x <= LINHAS - RAIOBOMBA)
+        if(bomba.y >= RAIOBOMBA && bomba->y <= COLUNAS - RAIOBOMBA)
             quadradosAtingidos = ;
         else
             if(bomba.y == RAIOBOMBA - 1 || bomba.y == LINHAS - RAIOBOMBA + 1)
@@ -29,3 +29,4 @@ void explodir(Bomba *bomba, Mapa *mapa)
 
 
 }
+*/
