@@ -80,6 +80,14 @@ bool verificarMonstro(Player mago, Monstro monstro);
 // Description:
 bool verificarPocao(Player mago, char terreno[][MAPAX]);
 
-void colocarBomba(Player *mago, char terreno[][MAPAX]);
+// Name:
+// Type: Function
+// Inputs:
+// Output:
+// Return:
+// Description:
+void colocarBomba(Player *mago, Mapa *mapa);
+
+
 
 #endif // PLAYER_H_INCLUDED

@@ -3,16 +3,20 @@
 
 #include <stdbool.h>
 #include "raylib.h"
+#include "mapa.h"
 
 #define MAPAX 27
+#define RAIOBOMBA 2
 
 typedef struct
 {
     int x,y;
     bool ativa;
-    Color color;
+    double tempoAtivacao;
 }Bomba;
 
+
+bool verificarExplosao(Bomba bomba, double tempo);
 
 
 #endif // BOMBA_H_INCLUDED

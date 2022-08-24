@@ -79,3 +79,21 @@ char movimentoAleatorio()
 }
 
 
+bool verificarPosicaoBomba(Mapa mapa, int destino[])
+{
+    int criatura, monstro;
+
+    for(criatura = 0; criatura < mapa.numeroCriaturas; criatura++)
+        if(mapa.criaturas[criatura].x == destino[0] && mapa.criaturas[criatura].y == destino[1])
+            return false;
+
+    for(monstro = 0; monstro < mapa.numeroMonstros; monstro++)
+        if(mapa.monstros[monstro].x == destino[0] && mapa.monstros[monstro].y == destino[1])
+            return false;
+
+    if(!movimentoPossivel(mapa.terreno,destino))
+        return false;
+
+    return true;
+}
+

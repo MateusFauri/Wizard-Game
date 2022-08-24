@@ -39,7 +39,7 @@ static Jogo jogo;
 void desenhar(Jogo *jogo);
 
 int main(void){
-    int  criatura, monstro;
+    int  criatura, monstro, bomba;
 
     if(!novoJogo(&jogo))
         return 1;
@@ -51,6 +51,7 @@ int main(void){
 
     while(!WindowShouldClose())
     {
+
         if(verificarPocao(jogo.mago, jogo.mapa.terreno))
             aumentarPontuacao(&jogo.mago, POCAOCOLETADA);
 
@@ -60,8 +61,6 @@ int main(void){
                 movimentarCriatura( &jogo.mapa.criaturas[criatura], jogo.mapa.terreno);
             for(monstro = 0; monstro < jogo.mapa.numeroMonstros; monstro++)
                 movimentarMonstro( &jogo.mapa.monstros[monstro], jogo.mapa.terreno);
-            //if(framesCounter % (TEMPO * TEMPOBOMBA) == 0 )
-            //      explodirBomba()
         }
 
         for(criatura = 0; criatura < jogo.mapa.numeroCriaturas; criatura++)
@@ -93,7 +92,26 @@ int main(void){
         }
 
         if(GetKeyPressed() == B)
-            colocarBomba(&jogo.mago, jogo.mapa.terreno);
+            colocarBomba(&jogo.mago, &jogo.mapa);
+
+        if(jogo.mago.quantidadeBombas < BOMBAS)
+        {
+            for(bomba = 0; bomba < jogo.mago.quantidadeBombas; bomba++)
+                if(verificarExplosao(jogo.mago.bombas[bomba], GetTime()))
+                {
+                    explodir(&jogo.mago.bombas[bomba], &jogo.mapa);
+
+                }
+        }
+
+
+        if( passouTempoBomba)
+        {
+            printf("Explodir\n");
+            explodido = true;
+
+        }
+
 
         desenhar(&jogo);
         movimentoPersonagem(&jogo.mago, jogo.mapa.terreno);
@@ -144,9 +162,7 @@ void desenhar(Jogo *jogo)
             for(bomba = 0; bomba < BOMBAS; bomba++)
             {
                 if(jogo->mago.bombas[bomba].ativa)
-                {
-                    DrawRectangle(jogo->mago.bombas[bomba].x * PASSO, jogo->mago.bombas[bomba].y * PASSO, PASSO, PASSO, YELLOW);
-                }
+                    DrawRectangle(jogo->mago.bombas[bomba].x * PASSO, jogo->mago.bombas[bomba].y * PASSO, PASSO, PASSO, BLACK);
             }
 
 

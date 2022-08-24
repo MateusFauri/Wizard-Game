@@ -122,7 +122,7 @@ bool verificarPocao(Player mago, char terreno[][MAPAX])
 }
 
 
-void colocarBomba(Player *mago, char terreno[][MAPAX])
+void colocarBomba(Player *mago, Mapa *mapa)
 {
     int bomba, destino[2] = { 0 };
 
@@ -145,19 +145,23 @@ void colocarBomba(Player *mago, char terreno[][MAPAX])
         destino[1] = mago->y;
         break;
     }
+
+
     if(mago->quantidadeBombas > 0)
     {
-        bomba = BOMBA - mago->quantidadeBombas;
-        if(movimentoPossivel(terreno,destino))
+        if(verificarPosicaoBomba(*mapa, destino))
         {
+            bomba = BOMBAS - mago->quantidadeBombas;
             mago->quantidadeBombas -= 1;
             mago->bombas[bomba].x = destino[0];
             mago->bombas[bomba].y = destino[1];
             mago->bombas[bomba].ativa = true;
-            terreno[destino[1]][destino[0]] = BOMBA;
+            mago->bombas[bomba].tempoAtivacao = GetTime();
+            mapa->terreno[destino[1]][destino[0]] = BOMBA;
         }
     }
 
 }
+
 
 
