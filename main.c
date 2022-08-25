@@ -155,16 +155,9 @@ void desenharPause(Jogo *jogo)
 void atualizarJogo(Jogo *jogo)
 {
     const int keyParada = P;
-    int criatura, monstro, bomba, faseAtual;
+    int criatura, monstro, bomba;
     bool continuarRodando;
     char botaoPressionado;
-
-    faseAtual = jogo->fase;
-    if(jogo->fase != faseAtual)
-    {
-        //passarFase();
-        faseAtual = jogo->fase;
-    }
 
     continuarRodando = jogo->tela == TELAJOGO && !WindowShouldClose();
 
@@ -224,6 +217,9 @@ void atualizarJogo(Jogo *jogo)
         if(todasCriaturasColetadas(jogo->mapa.criaturas, jogo->mapa.numeroCriaturas))
         {
             jogo->fase += 1;
+            printf("%d\n",jogo->fase);
+            passarFase(jogo);
+            desenharJogo(jogo);
         }
 
         continuarRodando = jogo->tela == TELAJOGO && !WindowShouldClose();

@@ -29,7 +29,7 @@ void novoJogo(Jogo *jogo);
 // Output:
 // Return:
 // Description:
-void passarFase();
+void passarFase(Jogo* jogo);
 
 // Name:
 // Type: Function

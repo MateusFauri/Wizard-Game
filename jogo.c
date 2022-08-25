@@ -47,6 +47,17 @@ void novoJogo(Jogo *jogo)
 
 }
 
+void passarFase(Jogo* jogo)
+{
+    if(inicializarMapa(&jogo->mapa, jogo->fase))
+    {
+        jogo->mago.x = jogo->mago.xInicial = jogo->mapa.posicaoXInicialJogador;
+        jogo->mago.y = jogo->mago.yInicial = jogo->mapa.posicaoYInicialJogador;
+    }
+     else
+        printf("Falhou!");
+}
+
 void resetarMapa(Player *mago, Mapa *mapa)
 {
     int criatura, monstro;

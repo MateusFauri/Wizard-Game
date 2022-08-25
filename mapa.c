@@ -16,46 +16,6 @@
 #define DIREITA 'D'
 #define ASCII 64
 
-void mudarPath(Mapa *mapa, int fase)
-{
-    char path[] = "Mapas/mapa_.txt";
-    char caracter;
-
-    path[10] = (char) (ASCII + fase);
-
-    strcpy(mapa->path, path);
-}
-
-bool lerMapa(Mapa *mapa)
-{
-    FILE *file;
-    int coluna, linha;
-    char caracter;
-
-    linha = coluna = 0;
-
-    file = fopen(mapa->path,"r");
-
-    if(file == NULL)
-        return false;
-    do
-    {
-        caracter = fgetc(file);
-        if(caracter != '\n')
-        {
-            mapa->terreno[linha][coluna] = caracter;
-
-            coluna +=  1;
-            if(coluna == COLUNAS)
-            {
-                linha += 1;
-                coluna = 0;
-            }
-        }
-    }while(caracter != EOF);
-    fclose(file);
-    return true;
-}
 
 bool inicializarMapa(Mapa *mapa, int fase)
 {
@@ -66,6 +26,7 @@ bool inicializarMapa(Mapa *mapa, int fase)
 
     if(!lerMapa(mapa))
         return false;
+    printf("%s\n",mapa->path);
 
     criatura = monstro = 0;
 
@@ -103,6 +64,46 @@ bool inicializarMapa(Mapa *mapa, int fase)
     mapa->numeroCriaturas = criatura;
     mapa->numeroMonstros = monstro;
 
+    return true;
+}
+
+void mudarPath(Mapa *mapa, int fase)
+{
+    char path[] = "Mapas/mapa_.txt";
+
+    path[10] = (char) (ASCII + fase);
+
+    strcpy(mapa->path, path);
+}
+
+bool lerMapa(Mapa *mapa)
+{
+    FILE *file;
+    int coluna, linha;
+    char caracter;
+
+    linha = coluna = 0;
+
+    file = fopen(mapa->path,"r");
+
+    if(file == NULL)
+        return false;
+    do
+    {
+        caracter = fgetc(file);
+        if(caracter != '\n')
+        {
+            mapa->terreno[linha][coluna] = caracter;
+
+            coluna +=  1;
+            if(coluna == COLUNAS)
+            {
+                linha += 1;
+                coluna = 0;
+            }
+        }
+    }while(caracter != EOF);
+    fclose(file);
     return true;
 }
 
