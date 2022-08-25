@@ -10,7 +10,6 @@ typedef struct{
     int x,y, passoDado;
     bool pega;
     char movimento;
-    Color color;
 }Criatura;
 
 

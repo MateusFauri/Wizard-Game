@@ -7,6 +7,7 @@
 typedef struct{
     int fase;
     char tela;
+    bool fecharJogo;
     Mapa mapa;
     Player mago;
 }Jogo;
@@ -19,7 +20,7 @@ typedef struct{
 // Output: Tem muitos.... atualizar isso!
 // Return: Um booleano que informa se conseguimos criar um novo jogo ou nao.
 // Description: Inicializar um novo jogo, carregando mapas, personagens, criaturas e monstros.
-bool novoJogo(Jogo *jogo);
+void novoJogo(Jogo *jogo);
 
 // Name:
 // Type:

@@ -63,7 +63,7 @@ void movimentarMonstro(Monstro *monstro, char terreno[][MAPAX])
         {
             monstro->movimento =  movimentoAleatorio();
             monstro->passoDado = 0;
-            movimentarMonstros(terreno, monstro);
+            movimentarMonstro(monstro,terreno);
         }
     }
 }
@@ -77,4 +77,3 @@ void resetarMonstro(Monstro *monstro)
         monstro->y = monstro->yInicial;
     }
 }
-

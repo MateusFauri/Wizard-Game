@@ -12,7 +12,9 @@
 
 typedef struct
 {
+    char path[PATH];
     char terreno[LINHAS][COLUNAS];
+    int posicaoXInicialJogador, posicaoYInicialJogador;
     int numeroCriaturas;
     int numeroMonstros;
     Criatura criaturas[CRIATURAS];
@@ -28,6 +30,8 @@ typedef struct
 // Return: um booleano validando se o arquivo .txt conseguiu ser aberto ou não.
 // Description: Le o arquivo de texto contendo o mapa e passa para a matriz terreno da struct MAPA.
 bool lerMapa(Mapa *mapa);
+
+bool inicializarMapa(Mapa *mapa, int fase);
 
 // Name: MovimentoPossivel
 // Type: Function
@@ -49,4 +53,7 @@ char movimentoAleatorio();
 
 
 bool verificarPosicaoBomba(Mapa mapa, int destino[]);
+
+void mudarPath();
+
 #endif // MAPA_H_INCLUDED

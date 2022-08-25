@@ -50,10 +50,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="mapa.h" />
-		<Unit filename="monstros.h" />
-		<Unit filename="montros.c">
+		<Unit filename="monstros.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="monstros.h" />
 		<Unit filename="player.c">
 			<Option compilerVar="CC" />
 		</Unit>

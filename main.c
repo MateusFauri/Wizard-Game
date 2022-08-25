@@ -30,7 +30,7 @@
 #define VIDAS 3
 #define TEMPO 60
 #define B 66
-#define TAB 258
+#define P 80
 #define TEMPOBOMBA 3
 #define TELAINICIO 'I'
 #define TELAJOGO 'J'
@@ -39,29 +39,25 @@
 static int framesCounter = 0;
 static Jogo jogo;
 
-static bool desenhar(Jogo *jogo);
+static void desenhar(Jogo *jogo);
 static void desenharInicio(Jogo *jogo);
 static void desenharPause(Jogo *jogo);
 static void atualizarJogo(Jogo *jogo);
 static void desenharJogo(Jogo *jogo);
 
+
 int main(void){
-    int fechar;
-
-    fechar = false;
     jogo.tela = TELAINICIO;
+    jogo.fecharJogo = false;
 
-    do{
-        fechar = desenhar(&jogo);
-    }while(!fechar);
-
+    while(!jogo.fecharJogo)
+        desenhar(&jogo);
 
     CloseWindow();
     return 0;
 }
 
-
-bool desenhar(Jogo *jogo)
+void desenhar(Jogo *jogo)
 {
     char tela;
 
@@ -79,11 +75,6 @@ bool desenhar(Jogo *jogo)
         desenharPause(jogo);
         break;
     }
-
-    //if(gameOver())
-    //  return true;
-
-    return false;
 }
 
 void desenharInicio(Jogo *jogo)
@@ -95,20 +86,22 @@ void desenharInicio(Jogo *jogo)
     const int posCarregarJogoY = 200;
     const int posSairY = 400;
     Vector2 posMouse;
-    bool mouseEmNovoJogo, mudouTela = false;
+    bool mouseEmNovoJogo, continuarRodando;
 
     InitWindow(LARGURA, ALTURA, "Jogo");
     SetTargetFPS(TEMPO);
 
-    while(!mudouTela)
+    continuarRodando = jogo->tela == TELAINICIO && !WindowShouldClose();
+
+    while(continuarRodando)
     {
         posMouse = GetMousePosition();
         mouseEmNovoJogo = (posMouse.x > 20 && posMouse.x < 140) && (posMouse.y > 150 && posMouse.y < 165);
 
         if(IsMouseButtonPressed(botaoDireito) && mouseEmNovoJogo)
         {
+            novoJogo(jogo);
             jogo->tela = TELAJOGO;
-            mudouTela = true;
         }
 
         BeginDrawing();
@@ -121,6 +114,10 @@ void desenharInicio(Jogo *jogo)
             DrawText(TextFormat("SAIR"), posX, posSairY, 20, LIGHTGRAY);
 
         EndDrawing();
+
+        continuarRodando = jogo->tela == TELAINICIO && !WindowShouldClose();
+        if(WindowShouldClose())
+            jogo->fecharJogo = true;
     }
 
 }
@@ -131,12 +128,12 @@ void desenharPause(Jogo *jogo)
     const int posNovoJogoY = 150;
     const int posSalvarJogoY = 200;
     const int posSairY = 400;
-    bool  mudouTela = false;
+    bool  continuarRodando;
 
-    InitWindow(LARGURA, ALTURA, "Jogo");
-    SetTargetFPS(TEMPO);
+    ShowCursor();
+    continuarRodando = jogo->tela == TELAPAUSE && !WindowShouldClose();
 
-    while(!mudouTela)
+    while(continuarRodando)
     {
         BeginDrawing();
 
@@ -147,23 +144,33 @@ void desenharPause(Jogo *jogo)
             DrawText(TextFormat("SAIR"), posX, posSairY, 20, LIGHTGRAY);
 
         EndDrawing();
+
+        continuarRodando = jogo->tela == TELAPAUSE && !WindowShouldClose();
+        if(WindowShouldClose())
+            jogo->fecharJogo = true;
     }
 
 }
 
-
-
 void atualizarJogo(Jogo *jogo)
 {
-    const int keyParada = TAB;
-    int criatura, monstro, bomba;
-    bool telaParada = false;
+    const int keyParada = P;
+    int criatura, monstro, bomba, faseAtual;
+    bool continuarRodando;
+    char botaoPressionado;
 
-    if(!novoJogo(jogo))
-        printf("Nao leu\n");
-
-    while(!telaParada)
+    faseAtual = jogo->fase;
+    if(jogo->fase != faseAtual)
     {
+        //passarFase();
+        faseAtual = jogo->fase;
+    }
+
+    continuarRodando = jogo->tela == TELAJOGO && !WindowShouldClose();
+
+    while(continuarRodando)
+    {
+        botaoPressionado = GetKeyPressed();
 
         if(verificarPocao(jogo->mago, jogo->mapa.terreno))
             aumentarPontuacao(&jogo->mago, POCAOCOLETADA);
@@ -177,63 +184,56 @@ void atualizarJogo(Jogo *jogo)
         }
 
         for(criatura = 0; criatura < jogo->mapa.numeroCriaturas; criatura++)
-        {
             if(verificarCriatura(jogo->mago, jogo->mapa.criaturas[criatura]))
             {
                 aumentarPontuacao(&jogo->mago, CRIATURACOLETADA);
                 criaturaColetada(&jogo->mapa.criaturas[criatura]);
             }
-        }
 
         for(monstro = 0; monstro < jogo->mapa.numeroMonstros; monstro++)
-        {
             if(verificarMonstro(jogo->mago, jogo->mapa.monstros[monstro]))
             {
                 resetarMapa(&jogo->mago, &jogo->mapa);
                 perderVida(&jogo->mago);
             }
-        }
-
-        if(todasCriaturasColetadas(jogo->mapa.criaturas, jogo->mapa.numeroCriaturas))
-        {
-            jogo->fase+= 1;
-            if(!novoJogo(jogo))
-            {
-                printf("Nao deu certo\n");
-            }
-        }
-
-        if(GetKeyPressed() == B)
-            colocarBomba(&jogo->mago, &jogo->mapa);
 
         if(jogo->mago.quantidadeBombas < BOMBAS)
-        {
             for(bomba = 0; bomba < jogo->mago.quantidadeBombas; bomba++)
-                if(verificarExplosao(jogo->mago.bombas[bomba], GetTime()))
-                {
-                    //explodir(&jogo->mago.bombas[bomba], &jogo->mapa);
+                if(jogo->mago.bombas[bomba].ativa)
+                    if(verificarExplosao(jogo->mago.bombas[bomba], GetTime()))
+                    {
+                        explodir(&jogo->mago.bombas[bomba], &jogo->mapa);
+                        jogo->mago.quantidadeBombas++;
+                    }
 
-                }
-        }
-
-        /*
-        if( passouTempoBomba)
+        if(botaoPressionado == B)
         {
-            printf("Explodir\n");
-            explodido = true;
-
+            colocarBomba(&jogo->mago, &jogo->mapa);
         }
-        */
 
         desenharJogo(jogo);
         movimentoPersonagem(&jogo->mago, jogo->mapa.terreno);
 
+        if(botaoPressionado == keyParada) jogo->tela = TELAPAUSE ;
+
+        //if(botaoPressionado != 0)
+        //      printf("%d \n", botaoPressionado);
+
         framesCounter++;
 
-        if(GetKeyPressed() == keyParada) telaParada = true;
+        if(todasCriaturasColetadas(jogo->mapa.criaturas, jogo->mapa.numeroCriaturas))
+        {
+            jogo->fase += 1;
+        }
+
+        continuarRodando = jogo->tela == TELAJOGO && !WindowShouldClose();
+        if(WindowShouldClose())
+            jogo->fecharJogo = true;
     }
-    jogo->tela = TELAPAUSE;
+
+
 }
+
 
 void desenharJogo(Jogo *jogo)
 {
@@ -256,7 +256,7 @@ void desenharJogo(Jogo *jogo)
                 if (caracter == PAREDE)
                     DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, BROWN);
                 if (caracter == PAREDEDESTRUTIVEL)
-                    DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, BROWN);
+                    DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, YELLOW);
                 if (caracter == POCAO)
                     DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, BLUE);
             }

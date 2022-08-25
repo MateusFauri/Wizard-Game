@@ -14,18 +14,27 @@
 #define BAIXO 'B'
 #define ESQUERDA 'E'
 #define DIREITA 'D'
+#define ASCII 64
 
+void mudarPath(Mapa *mapa, int fase)
+{
+    char path[] = "Mapas/mapa_.txt";
+    char caracter;
+
+    path[10] = (char) (ASCII + fase);
+
+    strcpy(mapa->path, path);
+}
 
 bool lerMapa(Mapa *mapa)
 {
     FILE *file;
     int coluna, linha;
     char caracter;
-    char path[] = "Mapas/mapaA.txt";
 
     linha = coluna = 0;
 
-    file = fopen(path,"r");
+    file = fopen(mapa->path,"r");
 
     if(file == NULL)
         return false;
@@ -45,6 +54,55 @@ bool lerMapa(Mapa *mapa)
         }
     }while(caracter != EOF);
     fclose(file);
+    return true;
+}
+
+bool inicializarMapa(Mapa *mapa, int fase)
+{
+    int linha, coluna, criatura, monstro;
+    char peca;
+
+    mudarPath(mapa, fase);
+
+    if(!lerMapa(mapa))
+        return false;
+
+    criatura = monstro = 0;
+
+    for(linha = 0; linha < LINHAS; linha++)
+    {
+        for(coluna = 0; coluna < COLUNAS; coluna++)
+        {
+            peca = mapa->terreno[linha][coluna];
+
+            switch(peca)
+            {
+            case MAGO:
+                mapa->posicaoXInicialJogador = coluna;
+                mapa->posicaoYInicialJogador = linha;
+                break;
+            case CRIATURA:
+                mapa->criaturas[criatura].xInicial = mapa->criaturas[criatura].x = coluna;
+                mapa->criaturas[criatura].yInicial = mapa->criaturas[criatura].y = linha;
+                mapa->criaturas[criatura].pega = false;
+                mapa->criaturas[criatura].passoDado = 0;
+                mapa->criaturas[criatura].movimento = movimentoAleatorio();
+                criatura += 1;
+                break;
+            case MONSTRO:
+                mapa->monstros[monstro].xInicial = mapa->monstros[monstro].x = coluna;
+                mapa->monstros[monstro].yInicial = mapa->monstros[monstro].y = linha;
+                mapa->monstros[monstro].morto = false;
+                mapa->monstros[monstro].passoDado = 0;
+                mapa->monstros[monstro].movimento = movimentoAleatorio();
+                monstro += 1;
+                break;
+            }
+        }
+    }
+    mapa->numeroCriaturas = criatura;
+    mapa->numeroMonstros = monstro;
+
     return true;
 }
 

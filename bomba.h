@@ -6,7 +6,8 @@
 #include "mapa.h"
 
 #define MAPAX 27
-#define RAIOBOMBA 2
+#define MAPAY 11
+#define RAIOBOMBA 3
 
 typedef struct
 {
@@ -18,5 +19,8 @@ typedef struct
 
 bool verificarExplosao(Bomba bomba, double tempo);
 
+void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[]);
+
+void explodir(Bomba *bomba, Mapa *mapa);
 
 #endif // BOMBA_H_INCLUDED

@@ -10,7 +10,6 @@ typedef struct{
     int x, y, passoDado;
     bool morto;
     char movimento;
-    Color color;
 }Monstro;
 
 // Name: monstroMorto
