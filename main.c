@@ -115,39 +115,48 @@ void desenharInicio(Jogo *jogo)
 
         EndDrawing();
 
-        continuarRodando = jogo->tela == TELAINICIO && !WindowShouldClose();
         if(WindowShouldClose())
             jogo->fecharJogo = true;
+        continuarRodando = jogo->tela == TELAINICIO && !jogo->fecharJogo;
+
     }
 
 }
 
 void desenharPause(Jogo *jogo)
 {
+    const int botaoDireito = 0 ;
     const int posX = 20 ;
     const int posNovoJogoY = 150;
     const int posSalvarJogoY = 200;
     const int posSairY = 400;
-    bool  continuarRodando;
+    bool  mouseEmContinuarJogo, continuarRodando;
+    Vector2 posMouse;
 
     ShowCursor();
     continuarRodando = jogo->tela == TELAPAUSE && !WindowShouldClose();
 
     while(continuarRodando)
     {
+        posMouse = GetMousePosition();
+        mouseEmContinuarJogo = (posMouse.x > 20 && posMouse.x < 140) && (posMouse.y > 150 && posMouse.y < 165);
+
+        if(IsMouseButtonPressed(botaoDireito) && mouseEmContinuarJogo)
+            jogo->tela = TELAJOGO;
+
         BeginDrawing();
 
             ClearBackground(BLACK);
 
-            DrawText(TextFormat("NOVO JOGO"), posX, posNovoJogoY, 20, LIGHTGRAY);
+            DrawText(TextFormat("CONTINUAR JOGO"), posX, posNovoJogoY, 20, LIGHTGRAY);
             DrawText(TextFormat("SALVAR JOGO"), posX, posSalvarJogoY, 20, LIGHTGRAY);
             DrawText(TextFormat("SAIR"), posX, posSairY, 20, LIGHTGRAY);
 
         EndDrawing();
 
-        continuarRodando = jogo->tela == TELAPAUSE && !WindowShouldClose();
         if(WindowShouldClose())
             jogo->fecharJogo = true;
+        continuarRodando = jogo->tela == TELAPAUSE && !jogo->fecharJogo;
     }
 
 }
@@ -222,14 +231,13 @@ void atualizarJogo(Jogo *jogo)
             desenharJogo(jogo);
         }
 
-        continuarRodando = jogo->tela == TELAJOGO && !WindowShouldClose();
         if(WindowShouldClose())
             jogo->fecharJogo = true;
+        continuarRodando = jogo->tela == TELAJOGO && !jogo->fecharJogo;
     }
 
 
 }
-
 
 void desenharJogo(Jogo *jogo)
 {
