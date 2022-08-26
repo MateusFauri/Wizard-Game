@@ -1,14 +1,14 @@
 # -Wizard-game
 Final assignment of the course Algorithm and programming - UFRGS
 
-<h1> Fotos do Jogo </h1>
+<h1> Game pictures </h1>
 
 <div>
-  ![Imagem Inicial](../ImagensProjeto/TelaInicial.png)
+  ![Home screen](https://github.com/MateusFauri/Wizard-Game/blob/main/ImagensProjeto/TelaInicial.png)
 
 
-  ![Imagem Jogo](../ImagensProjeto/TelaJogo.png)
+  ![Game](https://github.com/MateusFauri/Wizard-Game/blob/main/ImagensProjeto/TelaJogo.png)
 
 
-  ![Imagem Pause](../ImagensProjeto/TelaPause.png)
+  ![Pause screen](https://github.com/MateusFauri/Wizard-Game/blob/main/ImagensProjeto/telaPause.png)
 </div>
