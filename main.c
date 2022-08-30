@@ -260,7 +260,7 @@ void desenharJogo(Jogo *jogo)
                 if (caracter == PAREDE)
                     DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, BROWN);
                 if (caracter == PAREDEDESTRUTIVEL)
-                    DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, YELLOW);
+                    DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, BROWN);
                 if (caracter == POCAO)
                     DrawRectangle(posicaoX, posicaoY, PASSO, PASSO, BLUE);
             }

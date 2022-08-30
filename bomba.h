@@ -6,7 +6,7 @@
 #include "mapa.h"
 
 #define MAPAX 27
-#define MAPAY 11
+#define MAPAY 10
 #define RAIOBOMBA 3
 
 typedef struct

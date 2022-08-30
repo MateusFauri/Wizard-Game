@@ -40,4 +40,5 @@ void passarFase(Jogo* jogo);
 void resetarMapa(Player *mago, Mapa *mapa);
 
 
+
 #endif // JOGOSS_H_INCLUDED

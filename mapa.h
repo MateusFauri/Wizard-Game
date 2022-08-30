@@ -51,7 +51,6 @@ bool movimentoPossivel(char terreno[][COLUNAS], int destino[]);
 // Description: Retorna uma direção aleatoria para o movimento dos personagens ou criaturas
 char movimentoAleatorio();
 
-
 bool verificarPosicaoBomba(Mapa mapa, int destino[]);
 
 void mudarPath();
