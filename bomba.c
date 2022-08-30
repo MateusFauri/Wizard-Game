@@ -101,7 +101,6 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
         }
         else
         {
-            printf("Entrou aq\n");
             perimetroExplosao[2] = RAIOBOMBA;
             perimetroExplosao[3] = RAIOBOMBA;
             switch(y)

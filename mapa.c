@@ -26,7 +26,6 @@ bool inicializarMapa(Mapa *mapa, int fase)
 
     if(!lerMapa(mapa))
         return false;
-    printf("%s\n",mapa->path);
 
     criatura = monstro = 0;
 

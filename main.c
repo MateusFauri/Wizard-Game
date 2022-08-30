@@ -35,6 +35,7 @@
 #define TELAINICIO 'I'
 #define TELAJOGO 'J'
 #define TELAPAUSE 'P'
+#define TELASALVAR 'S'
 
 static int framesCounter = 0;
 static Jogo jogo;
@@ -49,6 +50,9 @@ static void desenharJogo(Jogo *jogo);
 int main(void){
     jogo.tela = TELAINICIO;
     jogo.fecharJogo = false;
+
+    InitWindow(LARGURA, ALTURA, "Jogo");
+    SetTargetFPS(TEMPO);
 
     while(!jogo.fecharJogo)
         desenhar(&jogo);
@@ -74,6 +78,9 @@ void desenhar(Jogo *jogo)
     case TELAPAUSE:
         desenharPause(jogo);
         break;
+    case TELASALVAR:
+        desenharSalvar(jogo);
+        break;
     }
 }
 
@@ -88,9 +95,7 @@ void desenharInicio(Jogo *jogo)
     Vector2 posMouse;
     bool mouseEmNovoJogo, continuarRodando;
 
-    InitWindow(LARGURA, ALTURA, "Jogo");
-    SetTargetFPS(TEMPO);
-
+    ShowCursor();
     continuarRodando = jogo->tela == TELAINICIO && !WindowShouldClose();
 
     while(continuarRodando)
@@ -130,7 +135,7 @@ void desenharPause(Jogo *jogo)
     const int posNovoJogoY = 150;
     const int posSalvarJogoY = 200;
     const int posSairY = 400;
-    bool  mouseEmContinuarJogo, continuarRodando;
+    bool  mouseEmContinuarJogo, continuarRodando, mouseEmSalvar;
     Vector2 posMouse;
 
     ShowCursor();
@@ -139,10 +144,22 @@ void desenharPause(Jogo *jogo)
     while(continuarRodando)
     {
         posMouse = GetMousePosition();
-        mouseEmContinuarJogo = (posMouse.x > 20 && posMouse.x < 140) && (posMouse.y > 150 && posMouse.y < 165);
 
-        if(IsMouseButtonPressed(botaoDireito) && mouseEmContinuarJogo)
-            jogo->tela = TELAJOGO;
+        mouseEmContinuarJogo = (posMouse.x > 20 && posMouse.x < 200) && (posMouse.y > 150 && posMouse.y < 165);
+        mouseEmSalvar = (posMouse.x > 20 && posMouse.x < 160) && (posMouse.y > 200 && posMouse.y < 216);
+
+        if(IsMouseButtonPressed(botaoDireito))
+        {
+            if(mouseEmContinuarJogo)
+                jogo->tela = TELAJOGO;
+            if(mouseEmSalvar)
+            {
+                jogo->tela = TELASALVAR;
+                //mudar isso aqui em baixo para dentro da outra tela
+                salvarJogo(jogo, sizeof(*jogo));
+            }
+        }
+
 
         BeginDrawing();
 
@@ -157,6 +174,39 @@ void desenharPause(Jogo *jogo)
         if(WindowShouldClose())
             jogo->fecharJogo = true;
         continuarRodando = jogo->tela == TELAPAUSE && !jogo->fecharJogo;
+    }
+
+}
+
+void desenharSalvar(Jogo *jogo)
+{
+    const int botaoDireito = 0 ;
+    const int posX = 20 ;
+    const int posNovoJogoY = 150;
+    const int posSalvarJogoY = 200;
+    const int posSairY = 400;
+    bool  mouseEmConcluido, continuarRodando;
+    Vector2 posMouse;
+
+    ShowCursor();
+    continuarRodando = jogo->tela == TELASALVAR && !WindowShouldClose();
+
+    while(continuarRodando)
+    {
+        posMouse = GetMousePosition();
+
+        BeginDrawing();
+
+            ClearBackground(BLACK);
+            DrawText(TextFormat("NOME DO ARQUIVO:"), posX, posNovoJogoY, 20, LIGHTGRAY);
+            DrawText(TextFormat("SALVAR"), posX, posSalvarJogoY, 20, LIGHTGRAY);
+            DrawText(TextFormat("VOLTAR"), posX, posSairY, 20, LIGHTGRAY);
+
+        EndDrawing();
+
+        if(WindowShouldClose())
+            jogo->fecharJogo = true;
+        continuarRodando = jogo->tela == TELASALVAR && !jogo->fecharJogo;
     }
 
 }
@@ -195,8 +245,13 @@ void atualizarJogo(Jogo *jogo)
         for(monstro = 0; monstro < jogo->mapa.numeroMonstros; monstro++)
             if(verificarMonstro(jogo->mago, jogo->mapa.monstros[monstro]))
             {
-                resetarMapa(&jogo->mago, &jogo->mapa);
-                perderVida(&jogo->mago);
+                if(jogo->mago.vidas > 1)
+                {
+                    resetarMapa(&jogo->mago, &jogo->mapa);
+                    perderVida(&jogo->mago);
+                }
+                else
+                    gameOver(jogo);
             }
 
         if(jogo->mago.quantidadeBombas < BOMBAS)
@@ -217,9 +272,7 @@ void atualizarJogo(Jogo *jogo)
         movimentoPersonagem(&jogo->mago, jogo->mapa.terreno);
 
         if(botaoPressionado == keyParada) jogo->tela = TELAPAUSE ;
-
-        //if(botaoPressionado != 0)
-        //      printf("%d \n", botaoPressionado);
+        if(jogo->gameOver) jogo->tela = TELAINICIO;
 
         framesCounter++;
 
@@ -233,7 +286,8 @@ void atualizarJogo(Jogo *jogo)
 
         if(WindowShouldClose())
             jogo->fecharJogo = true;
-        continuarRodando = jogo->tela == TELAJOGO && !jogo->fecharJogo;
+
+        continuarRodando = (jogo->tela == TELAJOGO && !jogo->fecharJogo) ;
     }
 
 

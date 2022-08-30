@@ -8,6 +8,7 @@ typedef struct{
     int fase;
     char tela;
     bool fecharJogo;
+    bool gameOver;
     Mapa mapa;
     Player mago;
 }Jogo;
@@ -39,6 +40,7 @@ void passarFase(Jogo* jogo);
 // Description:
 void resetarMapa(Player *mago, Mapa *mapa);
 
-
+bool salvarJogo(Jogo *jogo, int sizeJogo);
+bool carregarJogo(Jogo *jogo);
 
 #endif // JOGOSS_H_INCLUDED

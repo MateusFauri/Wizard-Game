@@ -28,6 +28,7 @@ void novoJogo(Jogo *jogo)
     int bomba;
 
     jogo->fase = 1;
+    jogo->gameOver = false;
 
     if(inicializarMapa(&jogo->mapa, jogo->fase))
     {
@@ -71,3 +72,35 @@ void resetarMapa(Player *mago, Mapa *mapa)
         resetarMonstro(&mapa->monstros[monstro]);
 }
 
+void gameOver(Jogo *jogo)
+{
+    jogo->gameOver = true;
+}
+
+bool salvarJogo(Jogo *jogo, int sizeJogo)
+{
+    FILE *salvar;
+    char nome[50];
+
+    printf("Digite o nome do Arquivo: ");
+    scanf("%s", &nome);
+    salvar = fopen(nome, "wb");
+    if(!salvar)
+    {
+        fclose(salvar);
+        return false;
+    }
+    if(fwrite(jogo, sizeJogo , 1, salvar) != 1)
+    {
+        fclose(salvar);
+        return false;
+    }
+
+    fclose(salvar);
+    return true;
+}
+
+bool carregarJogo(Jogo *jogo)
+{
+    return false;
+}
