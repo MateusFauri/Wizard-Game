@@ -36,6 +36,7 @@
 #define TELAJOGO 'J'
 #define TELAPAUSE 'P'
 #define TELASALVAR 'S'
+#define TELACARREGAR 'C'
 
 static int framesCounter = 0;
 static Jogo jogo;
@@ -81,6 +82,9 @@ void desenhar(Jogo *jogo)
     case TELASALVAR:
         desenharSalvar(jogo);
         break;
+    case TELACARREGAR:
+        desenharCarregar(jogo);
+        break;
     }
 }
 
@@ -93,7 +97,7 @@ void desenharInicio(Jogo *jogo)
     const int posCarregarJogoY = 200;
     const int posSairY = 400;
     Vector2 posMouse;
-    bool mouseEmNovoJogo, continuarRodando;
+    bool mouseEmNovoJogo,mouseEmCarregar, continuarRodando;
 
     ShowCursor();
     continuarRodando = jogo->tela == TELAINICIO && !WindowShouldClose();
@@ -101,12 +105,23 @@ void desenharInicio(Jogo *jogo)
     while(continuarRodando)
     {
         posMouse = GetMousePosition();
-        mouseEmNovoJogo = (posMouse.x > 20 && posMouse.x < 140) && (posMouse.y > 150 && posMouse.y < 165);
 
-        if(IsMouseButtonPressed(botaoDireito) && mouseEmNovoJogo)
+        mouseEmNovoJogo = (posMouse.x > 20 && posMouse.x < 140) && (posMouse.y > 150 && posMouse.y < 165);
+        mouseEmCarregar = (posMouse.x > 20 && posMouse.x < 192) && (posMouse.y > 200 && posMouse.y < 215);
+
+        if(IsMouseButtonPressed(botaoDireito))
         {
-            novoJogo(jogo);
-            jogo->tela = TELAJOGO;
+            if(mouseEmNovoJogo)
+            {
+                novoJogo(jogo);
+                jogo->tela = TELAJOGO;
+            }
+
+            if(mouseEmCarregar)
+            {
+                jogo->tela = TELACARREGAR;
+            }
+
         }
 
         BeginDrawing();
@@ -155,8 +170,6 @@ void desenharPause(Jogo *jogo)
             if(mouseEmSalvar)
             {
                 jogo->tela = TELASALVAR;
-                //mudar isso aqui em baixo para dentro da outra tela
-                salvarJogo(jogo, sizeof(*jogo));
             }
         }
 
@@ -178,14 +191,63 @@ void desenharPause(Jogo *jogo)
 
 }
 
+void desenharCarregar(Jogo *jogo)
+{
+    const int botaoDireito = 0 ;
+    const int posX = 20 ;
+    const int posNomeArquivoY = 150;
+    const int posCarregarJogoY = 350;
+    const int posSairY = 400;
+    bool  mouseEmCarregar ,mouseEmVoltar, continuarRodando;
+    Vector2 posMouse;
+
+    ShowCursor();
+    continuarRodando = jogo->tela == TELACARREGAR && !WindowShouldClose();
+
+    while(continuarRodando)
+    {
+        posMouse = GetMousePosition();
+
+        mouseEmCarregar = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 348 && posMouse.y < 366);
+        mouseEmVoltar = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 402 && posMouse.y < 415);
+
+        if(IsMouseButtonPressed(botaoDireito))
+        {
+            if(mouseEmCarregar)
+            {
+                carregarJogo(jogo);
+                jogo->tela = TELAJOGO;
+            }
+
+            if(mouseEmVoltar)
+                jogo->tela = TELAINICIO;
+        }
+
+        BeginDrawing();
+
+            ClearBackground(BLACK);
+            DrawText(TextFormat("NOME DO ARQUIVO:"), posX, posNomeArquivoY, 20, LIGHTGRAY);
+            DrawText(TextFormat("Carregar"), LARGURA / 2, posCarregarJogoY, 20, LIGHTGRAY);
+            DrawText(TextFormat("VOLTAR"), LARGURA / 2, posSairY, 20, LIGHTGRAY);
+
+        EndDrawing();
+
+
+        if(WindowShouldClose())
+            jogo->fecharJogo = true;
+        continuarRodando = jogo->tela == TELACARREGAR && !jogo->fecharJogo;
+    }
+
+}
+
 void desenharSalvar(Jogo *jogo)
 {
     const int botaoDireito = 0 ;
     const int posX = 20 ;
-    const int posNovoJogoY = 150;
-    const int posSalvarJogoY = 200;
+    const int posNomeArquivoY = 150;
+    const int posSalvarJogoY = 350;
     const int posSairY = 400;
-    bool  mouseEmConcluido, continuarRodando;
+    bool  mouseEmSalvar,mouseEmVoltar, continuarRodando;
     Vector2 posMouse;
 
     ShowCursor();
@@ -195,14 +257,27 @@ void desenharSalvar(Jogo *jogo)
     {
         posMouse = GetMousePosition();
 
+        mouseEmSalvar = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 348 && posMouse.y < 366);
+        mouseEmVoltar = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 402 && posMouse.y < 415);
+
+        if(IsMouseButtonPressed(botaoDireito))
+        {
+            if(mouseEmSalvar)
+                salvarJogo(jogo);
+
+            if(mouseEmVoltar)
+                jogo->tela = TELAPAUSE;
+        }
+
         BeginDrawing();
 
             ClearBackground(BLACK);
-            DrawText(TextFormat("NOME DO ARQUIVO:"), posX, posNovoJogoY, 20, LIGHTGRAY);
-            DrawText(TextFormat("SALVAR"), posX, posSalvarJogoY, 20, LIGHTGRAY);
-            DrawText(TextFormat("VOLTAR"), posX, posSairY, 20, LIGHTGRAY);
+            DrawText(TextFormat("NOME DO ARQUIVO:"), posX, posNomeArquivoY, 20, LIGHTGRAY);
+            DrawText(TextFormat("SALVAR"), LARGURA / 2, posSalvarJogoY, 20, LIGHTGRAY);
+            DrawText(TextFormat("VOLTAR"), LARGURA / 2, posSairY, 20, LIGHTGRAY);
 
         EndDrawing();
+
 
         if(WindowShouldClose())
             jogo->fecharJogo = true;

@@ -78,21 +78,25 @@ void gameOver(Jogo *jogo)
     jogo->gameOver = true;
 }
 
-bool salvarJogo(Jogo *jogo, int sizeJogo)
+bool salvarJogo(Jogo *jogo)
 {
     FILE *salvar;
+    char caminhoCompleto[] = "Saves/";
     char nome[50];
 
     printf("Digite o nome do Arquivo: ");
     scanf("%s", &nome);
 
-    salvar = fopen(nome, "wb");
+    strcat(caminhoCompleto,nome);
+
+    salvar = fopen(caminhoCompleto, "wb");
+
     if(!salvar)
     {
         fclose(salvar);
         return false;
     }
-    if(fwrite(jogo, sizeJogo , 1, salvar) != 1)
+    if(fwrite(jogo, sizeof(Jogo), 1, salvar) != 1)
     {
         fclose(salvar);
         return false;
@@ -102,21 +106,25 @@ bool salvarJogo(Jogo *jogo, int sizeJogo)
     return true;
 }
 
-bool carregarJogo(Jogo *jogo,int sizeJogo)
+bool carregarJogo(Jogo *jogo)
 {
     FILE *carregar;
+    char caminhoCompleto[] = "Saves/";
     char nome[50];
 
     printf("Digite o nome do Arquivo: ");
     scanf("%s", &nome);
 
-    carregar = fopen(nome, "rb");
+    strcat(caminhoCompleto,nome);
+
+    carregar = fopen(caminhoCompleto, "rb");
+
     if(!carregar)
     {
         fclose(carregar);
         return false;
     }
-    if(fread(jogo, sizeJogo, 1, carregar) != 1)
+    if(fread(jogo, sizeof(Jogo), 1, carregar) != 1)
     {
         fclose(carregar);
         return false;

@@ -42,7 +42,7 @@ void resetarMapa(Player *mago, Mapa *mapa);
 
 void gameOver(Jogo *jogo);
 
-bool salvarJogo(Jogo *jogo, int sizeJogo);
-bool carregarJogo(Jogo *jogo,int sizeJogo);
+bool salvarJogo(Jogo *jogo);
+bool carregarJogo(Jogo *jogo);
 
 #endif // JOGOSS_H_INCLUDED
