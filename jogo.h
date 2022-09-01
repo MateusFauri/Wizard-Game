@@ -40,7 +40,9 @@ void passarFase(Jogo* jogo);
 // Description:
 void resetarMapa(Player *mago, Mapa *mapa);
 
+void gameOver(Jogo *jogo);
+
 bool salvarJogo(Jogo *jogo, int sizeJogo);
-bool carregarJogo(Jogo *jogo);
+bool carregarJogo(Jogo *jogo,int sizeJogo);
 
 #endif // JOGOSS_H_INCLUDED

@@ -18,6 +18,7 @@
 #define PERDERVIDA -100
 #define NOVAVIDA 1000
 #define VIDAS 3
+#define BOMBAS 3
 #define CRIATURACOLETADA 10
 #define CIMA 'C'
 #define BAIXO 'B'
@@ -80,17 +81,17 @@ void resetarPersonagem(Player *mago)
 {
     mago->x = mago->xInicial;
     mago->y = mago->yInicial;
+    mago->quantidadeBombas = BOMBAS;
+
+    perderVida(mago);
 }
 
 void perderVida(Player *mago)
 {
-    mago->vidas -= 1;
-    if(mago->vidas == 0)
-    {
-        printf("Game Over\n");
-        //gamerOver();
-    }
-
+    if(mago->vidas > 1)
+        mago->vidas -= 1;
+    else
+        mago->vivo = false;
 }
 
 bool verificarCriatura(Player mago, Criatura criatura)

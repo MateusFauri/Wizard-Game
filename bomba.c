@@ -131,25 +131,39 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
 
 }
 
-void explodir(Bomba *bomba, Mapa *mapa)
+bool explodir(Bomba *bomba, Mapa *mapa, int posMago[])
 {
     int perimetroExplosao[LADOS], posicaoBomba[2] = { bomba->x, bomba->y};
-    int linha, coluna;
+    int linha, coluna, monstro;
+    bool magoExplodido = false;
 
     verificarPerimetroExplosao(posicaoBomba, perimetroExplosao);
 
     for(linha = bomba->y - perimetroExplosao[0]; linha <= bomba->y + perimetroExplosao[1]; linha++)
     {
-        //printf("Linha : %d ",linha);
         for(coluna = bomba->x - perimetroExplosao[3]; coluna <= bomba->x + perimetroExplosao[2]; coluna++)
         {
-            //printf("Coluna : %d ",coluna);
             if(mapa->terreno[linha][coluna] != PAREDE)
                 mapa->terreno[linha][coluna] = ' ';
+
+            if(posMago[0] == coluna && posMago[1] == linha)
+                magoExplodido = true;
+
+            for(monstro = 0; monstro < mapa->numeroMonstros; monstro++)
+            {
+                if(mapa->monstros[monstro].x == coluna && mapa->monstros[monstro].y == linha)
+                    mapa->monstros[monstro].morto = true;
+            }
+
         }
-        //printf("\n");
     }
 
     bomba->ativa = false;
     mapa->terreno[bomba->y][bomba->x] = ' ';
+
+    if(magoExplodido)
+        return true;
+    else
+        return false;
+
 }

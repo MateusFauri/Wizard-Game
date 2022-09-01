@@ -214,7 +214,7 @@ void desenharSalvar(Jogo *jogo)
 void atualizarJogo(Jogo *jogo)
 {
     const int keyParada = P;
-    int criatura, monstro, bomba;
+    int criatura, monstro, bomba, posMago[2];
     bool continuarRodando;
     char botaoPressionado;
 
@@ -244,23 +244,17 @@ void atualizarJogo(Jogo *jogo)
 
         for(monstro = 0; monstro < jogo->mapa.numeroMonstros; monstro++)
             if(verificarMonstro(jogo->mago, jogo->mapa.monstros[monstro]))
-            {
-                if(jogo->mago.vidas > 1)
-                {
-                    resetarMapa(&jogo->mago, &jogo->mapa);
-                    perderVida(&jogo->mago);
-                }
-                else
-                    gameOver(jogo);
-            }
+                resetarMapa(&jogo->mago, &jogo->mapa);
 
         if(jogo->mago.quantidadeBombas < BOMBAS)
             for(bomba = 0; bomba < jogo->mago.quantidadeBombas; bomba++)
                 if(jogo->mago.bombas[bomba].ativa)
                     if(verificarExplosao(jogo->mago.bombas[bomba], GetTime()))
                     {
-                        explodir(&jogo->mago.bombas[bomba], &jogo->mapa);
-                        jogo->mago.quantidadeBombas++;
+                        if(explodir(&jogo->mago.bombas[bomba], &jogo->mapa, posMago))
+                            resetarMapa(&jogo->mago, &jogo->mapa);
+                        else
+                            jogo->mago.quantidadeBombas += 1;
                     }
 
         if(botaoPressionado == B)
@@ -269,19 +263,31 @@ void atualizarJogo(Jogo *jogo)
         }
 
         desenharJogo(jogo);
-        movimentoPersonagem(&jogo->mago, jogo->mapa.terreno);
 
-        if(botaoPressionado == keyParada) jogo->tela = TELAPAUSE ;
-        if(jogo->gameOver) jogo->tela = TELAINICIO;
-
-        framesCounter++;
-
-        if(todasCriaturasColetadas(jogo->mapa.criaturas, jogo->mapa.numeroCriaturas))
+        if(jogo->mago.vivo)
         {
-            jogo->fase += 1;
-            printf("%d\n",jogo->fase);
-            passarFase(jogo);
-            desenharJogo(jogo);
+            movimentoPersonagem(&jogo->mago, jogo->mapa.terreno);
+
+            posMago[0] = jogo->mago.x;
+            posMago[1] = jogo->mago.y;
+
+            if(botaoPressionado == keyParada) jogo->tela = TELAPAUSE;
+            if(jogo->gameOver) jogo->tela = TELAINICIO;
+
+            framesCounter++;
+
+            if(todasCriaturasColetadas(jogo->mapa.criaturas, jogo->mapa.numeroCriaturas))
+            {
+                jogo->fase += 1;
+                printf("%d\n",jogo->fase);
+                passarFase(jogo);
+                desenharJogo(jogo);
+            }
+
+        }
+        else
+        {
+            jogo->tela = TELAINICIO;
         }
 
         if(WindowShouldClose())

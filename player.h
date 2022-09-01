@@ -12,6 +12,7 @@ typedef struct{
     int x, y;
     int xInicial,yInicial;
     char direcaoAtual;
+    bool vivo;
     Color color;
     Bomba bombas[BOMBAS];
 }Player;

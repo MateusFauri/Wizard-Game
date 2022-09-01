@@ -35,6 +35,7 @@ void novoJogo(Jogo *jogo)
         jogo->mago.pontos = 0;
         jogo->mago.vidas = VIDAS;
         jogo->mago.color = PURPLE;
+        jogo->mago.vivo = true;
         jogo->mago.quantidadeBombas = BOMBAS;
         for(bomba=0; bomba < BOMBAS; bomba++)
             jogo->mago.bombas[bomba].ativa = false;
@@ -84,6 +85,7 @@ bool salvarJogo(Jogo *jogo, int sizeJogo)
 
     printf("Digite o nome do Arquivo: ");
     scanf("%s", &nome);
+
     salvar = fopen(nome, "wb");
     if(!salvar)
     {
@@ -100,7 +102,26 @@ bool salvarJogo(Jogo *jogo, int sizeJogo)
     return true;
 }
 
-bool carregarJogo(Jogo *jogo)
+bool carregarJogo(Jogo *jogo,int sizeJogo)
 {
-    return false;
+    FILE *carregar;
+    char nome[50];
+
+    printf("Digite o nome do Arquivo: ");
+    scanf("%s", &nome);
+
+    carregar = fopen(nome, "rb");
+    if(!carregar)
+    {
+        fclose(carregar);
+        return false;
+    }
+    if(fread(jogo, sizeJogo, 1, carregar) != 1)
+    {
+        fclose(carregar);
+        return false;
+    }
+
+    fclose(carregar);
+    return true;
 }
