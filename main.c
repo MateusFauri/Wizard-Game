@@ -44,9 +44,10 @@ static Jogo jogo;
 static void desenhar(Jogo *jogo);
 static void desenharInicio(Jogo *jogo);
 static void desenharPause(Jogo *jogo);
+static void desenharCarregar(Jogo *jogo);
+static void desenharSalvar(Jogo *jogo);
 static void atualizarJogo(Jogo *jogo);
 static void desenharJogo(Jogo *jogo);
-
 
 int main(void){
     jogo.tela = TELAINICIO;
@@ -97,7 +98,7 @@ void desenharInicio(Jogo *jogo)
     const int posCarregarJogoY = 200;
     const int posSairY = 400;
     Vector2 posMouse;
-    bool mouseEmNovoJogo,mouseEmCarregar, continuarRodando;
+    bool mouseEmNovoJogo,mouseEmCarregar, mouseEmSair ,continuarRodando;
 
     ShowCursor();
     continuarRodando = jogo->tela == TELAINICIO && !WindowShouldClose();
@@ -106,6 +107,7 @@ void desenharInicio(Jogo *jogo)
     {
         posMouse = GetMousePosition();
 
+        mouseEmSair = (posMouse.x > 20 && posMouse.x < 66) && (posMouse.y > 400 && posMouse.y < 417);
         mouseEmNovoJogo = (posMouse.x > 20 && posMouse.x < 140) && (posMouse.y > 150 && posMouse.y < 165);
         mouseEmCarregar = (posMouse.x > 20 && posMouse.x < 192) && (posMouse.y > 200 && posMouse.y < 215);
 
@@ -118,9 +120,10 @@ void desenharInicio(Jogo *jogo)
             }
 
             if(mouseEmCarregar)
-            {
                 jogo->tela = TELACARREGAR;
-            }
+
+            if(mouseEmSair)
+                jogo->fecharJogo = true;
 
         }
 
@@ -150,7 +153,7 @@ void desenharPause(Jogo *jogo)
     const int posNovoJogoY = 150;
     const int posSalvarJogoY = 200;
     const int posSairY = 400;
-    bool  mouseEmContinuarJogo, continuarRodando, mouseEmSalvar;
+    bool  mouseEmContinuarJogo, mouseEmSair, continuarRodando, mouseEmSalvar;
     Vector2 posMouse;
 
     ShowCursor();
@@ -162,15 +165,19 @@ void desenharPause(Jogo *jogo)
 
         mouseEmContinuarJogo = (posMouse.x > 20 && posMouse.x < 200) && (posMouse.y > 150 && posMouse.y < 165);
         mouseEmSalvar = (posMouse.x > 20 && posMouse.x < 160) && (posMouse.y > 200 && posMouse.y < 216);
+        mouseEmSair = (posMouse.x > 20 && posMouse.x < 66) && (posMouse.y > 400 && posMouse.y < 417);
 
         if(IsMouseButtonPressed(botaoDireito))
         {
             if(mouseEmContinuarJogo)
                 jogo->tela = TELAJOGO;
+
             if(mouseEmSalvar)
-            {
                 jogo->tela = TELASALVAR;
-            }
+
+            if(mouseEmSair)
+                jogo->fecharJogo = true;
+
         }
 
 
@@ -198,7 +205,7 @@ void desenharCarregar(Jogo *jogo)
     const int posNomeArquivoY = 150;
     const int posCarregarJogoY = 350;
     const int posSairY = 400;
-    bool  mouseEmCarregar ,mouseEmVoltar, continuarRodando;
+    bool  mouseEmCarregar, mouseEmVoltar, continuarRodando;
     Vector2 posMouse;
 
     ShowCursor();
@@ -333,9 +340,7 @@ void atualizarJogo(Jogo *jogo)
                     }
 
         if(botaoPressionado == B)
-        {
             colocarBomba(&jogo->mago, &jogo->mapa);
-        }
 
         desenharJogo(jogo);
 
@@ -362,6 +367,7 @@ void atualizarJogo(Jogo *jogo)
         }
         else
         {
+            jogo->gameOver = true;
             jogo->tela = TELAINICIO;
         }
 
