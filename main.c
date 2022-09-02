@@ -296,7 +296,7 @@ void desenharSalvar(Jogo *jogo)
 void atualizarJogo(Jogo *jogo)
 {
     const int keyParada = P;
-    int criatura, monstro, bomba, posMago[2];
+    int criatura, monstro, bomba, posMago[2], bufferPontos;
     bool continuarRodando;
     char botaoPressionado;
 
@@ -307,7 +307,15 @@ void atualizarJogo(Jogo *jogo)
         botaoPressionado = GetKeyPressed();
 
         if(verificarPocao(jogo->mago, jogo->mapa.terreno))
+        {
             aumentarPontuacao(&jogo->mago, POCAOCOLETADA);
+            bufferPontos = jogo->mago.pontos;
+            if(bufferPontos >= NOVAVIDA)
+            {
+                jogo->mago.vidas += 1;
+                bufferPontos = 0;
+            }
+        }
 
         if(framesCounter % TEMPO == 0)
         {
@@ -321,6 +329,12 @@ void atualizarJogo(Jogo *jogo)
             if(verificarCriatura(jogo->mago, jogo->mapa.criaturas[criatura]))
             {
                 aumentarPontuacao(&jogo->mago, CRIATURACOLETADA);
+                bufferPontos = jogo->mago.pontos;
+                if(bufferPontos >= NOVAVIDA)
+                {
+                    jogo->mago.vidas += 1;
+                    bufferPontos = 0;
+                }
                 criaturaColetada(&jogo->mapa.criaturas[criatura]);
             }
 

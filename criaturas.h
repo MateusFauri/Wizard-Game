@@ -17,34 +17,38 @@ typedef struct{
 // Type: Function
 // Inputs:
 //      Criatura *criatura
-// "Invariant": Modifica estado de criaturas.
-// Output: None.
+// Output: Modifica o estado da criatura
 // Return: None.
 // Description: Modificar o estado da criatura para pega.
 void criaturaColetada(Criatura *criatura);
 
-// Name:
+// Name: todasCriaturasColetadas
 // Type: Function
 // Inputs:
-// Output:
-// Return:
-// Description:
+//      Criatura criatura[] : vetor de criaturas do mapa
+//      int tamanho :  tamanho do vetor de criaturas
+// Output: None.
+// Return: Retorna um booleano se todas as criaturas foram coletadas ou nao
+// Description: Percorre todas as criaturas, vendo todas tem o atributo pega como verdadeiro.
 bool todasCriaturasColetadas(Criatura criatura[], int tamanho);
 
-// Name:
+// Name: resetarCriatura
 // Type: Function
 // Inputs:
-// Output:
-// Return:
-// Description:
+//      Criatura *criatura
+// Output:  modifica o estado de todas as criaturas que tenham o atributo pega falso.
+// Return:  None.
+// Description: Volta todas as criaturas nao pegas para a posicao inicial.
 void resetarCriatura(Criatura *criatura);
 
-// Name:
+// Name: movimentarCriatura
 // Type: Function
 // Inputs:
-// Output:
-// Return:
-// Description:
+//      Criatura *criatura
+//      char terreno[][MAPAX]
+// Output: modifica o estado das criaturas que tenham o atributo pega falso.
+// Return:  None.
+// Description: Movimenta todas as criaturas com movimentos aleatorios.
 void movimentarCriatura(Criatura *criatura, char terreno[][MAPAX]);
 
 

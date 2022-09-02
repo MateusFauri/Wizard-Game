@@ -8,7 +8,7 @@ typedef struct{
     int fase;
     char tela;
     bool fecharJogo;
-    bool gameOver;
+    bool gameOver, venceu;
     Mapa mapa;
     Player mago;
 }Jogo;

@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "player.h"
 
-#define MAPAX 27
 #define PAREDE 'W'
 #define PAREDEDESTRUTIVEL 'D'
 #define POCAO 'P'
@@ -18,7 +17,6 @@
 #define PERDERVIDA -100
 #define NOVAVIDA 1000
 #define VIDAS 3
-#define BOMBAS 3
 #define CRIATURACOLETADA 10
 #define CIMA 'C'
 #define BAIXO 'B'
@@ -69,12 +67,6 @@ void movimentar(Player *mago, char terreno[][MAPAX], int destino[])
 void aumentarPontuacao(Player *mago, int ponto)
 {
     mago->pontos += ponto;
-
-    if(mago->pontos >= NOVAVIDA)
-    {
-        mago->vidas += 1;
-        mago->pontos = 0;
-    }
 }
 
 void resetarPersonagem(Player *mago)
@@ -146,7 +138,6 @@ void colocarBomba(Player *mago, Mapa *mapa)
         destino[1] = mago->y;
         break;
     }
-
 
     if(mago->quantidadeBombas > 0)
     {

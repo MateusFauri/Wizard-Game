@@ -29,6 +29,7 @@ void novoJogo(Jogo *jogo)
 
     jogo->fase = 1;
     jogo->gameOver = false;
+    jogo->venceu = false;
 
     if(inicializarMapa(&jogo->mapa, jogo->fase))
     {
@@ -45,7 +46,10 @@ void novoJogo(Jogo *jogo)
 
     }
     else
-        printf("Falhou!");
+    {
+        printf("Voce venceu! \n");
+        jogo->venceu = true;
+    }
 
 }
 

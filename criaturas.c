@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include "criaturas.h"
 
-
-#define MAPAX 27
 #define CRIATURA 'K'
 #define CIMA 'C'
 #define BAIXO 'B'

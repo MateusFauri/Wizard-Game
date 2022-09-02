@@ -16,24 +16,27 @@ typedef struct{
 // Type: Function
 // Inputs:
 //      Monstro *monstro: vetor para uma struct monstro
-// Output:
-// Return: modifica o atributo do monstro morto para verdadeiro.
-// Description: Modifica o atributo do monstro morto para verdadeiro, avisando que aquele monstro não esta mais naquela fase
+// Output: modifica o estado do monstro
+// Return: None.
+// Description: Modifica o atributo do monstro morto para verdadeiro
 void monstroMorto(Monstro *monstro);
 
-// Name:
+// Name: resetarMontro
 // Type: Function
 // Inputs:
-// Output:
-// Return:
-// Description:
+//      Monstro *monstro
+// Output:  modifica o estado do monstro
+// Return: None.
+// Description: Volta todos os monstros vivos para sua posicao inicial
 void resetarMonstro(Monstro *monstro);
 
 // Name: MovimentoAleatorio
 // Type: Function
 // Inputs:
-// Output:
-// Return: um caracter aleatorio dentro desta lista ['C','B','D','E']
+//      Monstro *monstro
+//      char terreno[][MAPAX]
+// Output: modifica o estado do monstro
+// Return: None.
 // Description: Retorna uma direção aleatoria para o movimento dos personagens ou criaturas
 void movimentarMonstro(Monstro *monstro, char terreno[][MAPAX]);
 
