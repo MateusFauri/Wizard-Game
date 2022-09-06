@@ -22,7 +22,7 @@ bool inicializarMapa(Mapa *mapa, int fase)
     int linha, coluna, criatura, monstro;
     char peca;
 
-    mudarPath(mapa, fase);
+    sprintf(mapa->path, "Mapas/mapa%d.txt", fase);
 
     if(!lerMapa(mapa))
         return false;
@@ -64,15 +64,6 @@ bool inicializarMapa(Mapa *mapa, int fase)
     mapa->numeroMonstros = monstro;
 
     return true;
-}
-
-void mudarPath(Mapa *mapa, int fase)
-{
-    char path[] = "Mapas/mapa_.txt";
-
-    path[10] = (char) (ASCII + fase);
-
-    strcpy(mapa->path, path);
 }
 
 bool lerMapa(Mapa *mapa)

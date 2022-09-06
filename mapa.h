@@ -53,6 +53,4 @@ char movimentoAleatorio();
 
 bool verificarPosicaoBomba(Mapa mapa, int destino[]);
 
-void mudarPath();
-
 #endif // MAPA_H_INCLUDED

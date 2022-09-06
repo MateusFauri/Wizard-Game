@@ -300,6 +300,8 @@ void atualizarJogo(Jogo *jogo)
     bool continuarRodando;
     char botaoPressionado;
 
+    bufferPontos = 0;
+
     continuarRodando = jogo->tela == TELAJOGO && !WindowShouldClose();
 
     while(continuarRodando)
@@ -309,7 +311,7 @@ void atualizarJogo(Jogo *jogo)
         if(verificarPocao(jogo->mago, jogo->mapa.terreno))
         {
             aumentarPontuacao(&jogo->mago, POCAOCOLETADA);
-            bufferPontos = jogo->mago.pontos;
+            bufferPontos += POCAOCOLETADA;
             if(bufferPontos >= NOVAVIDA)
             {
                 jogo->mago.vidas += 1;
@@ -329,7 +331,7 @@ void atualizarJogo(Jogo *jogo)
             if(verificarCriatura(jogo->mago, jogo->mapa.criaturas[criatura]))
             {
                 aumentarPontuacao(&jogo->mago, CRIATURACOLETADA);
-                bufferPontos = jogo->mago.pontos;
+                bufferPontos += CRIATURACOLETADA;
                 if(bufferPontos >= NOVAVIDA)
                 {
                     jogo->mago.vidas += 1;
@@ -339,8 +341,9 @@ void atualizarJogo(Jogo *jogo)
             }
 
         for(monstro = 0; monstro < jogo->mapa.numeroMonstros; monstro++)
-            if(verificarMonstro(jogo->mago, jogo->mapa.monstros[monstro]))
-                resetarMapa(&jogo->mago, &jogo->mapa);
+            if(!jogo->mapa.monstros[monstro].morto)
+                if(verificarMonstro(jogo->mago, jogo->mapa.monstros[monstro]))
+                    resetarMapa(&jogo->mago, &jogo->mapa);
 
         if(jogo->mago.quantidadeBombas < BOMBAS)
             for(bomba = 0; bomba < jogo->mago.quantidadeBombas; bomba++)
