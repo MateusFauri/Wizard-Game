@@ -37,6 +37,9 @@
 #define TELAPAUSE 'P'
 #define TELASALVAR 'S'
 #define TELACARREGAR 'C'
+#define TELADERROTA 'D'
+#define TELAVITORIA 'V'
+
 
 static int framesCounter = 0;
 static Jogo jogo;
@@ -48,6 +51,8 @@ static void desenharCarregar(Jogo *jogo);
 static void desenharSalvar(Jogo *jogo);
 static void atualizarJogo(Jogo *jogo);
 static void desenharJogo(Jogo *jogo);
+static void desenharDerrota(Jogo *jogo);
+static void desenharVitoria(Jogo *jogo);
 
 int main(void){
     jogo.tela = TELAINICIO;
@@ -85,6 +90,12 @@ void desenhar(Jogo *jogo)
         break;
     case TELACARREGAR:
         desenharCarregar(jogo);
+        break;
+    case TELADERROTA:
+        desenharDerrota(jogo);
+        break;
+    case TELAVITORIA:
+        desenharVitoria(jogo);
         break;
     }
 }
@@ -194,6 +205,74 @@ void desenharPause(Jogo *jogo)
         if(WindowShouldClose())
             jogo->fecharJogo = true;
         continuarRodando = jogo->tela == TELAPAUSE && !jogo->fecharJogo;
+    }
+
+}
+
+void desenharDerrota(Jogo *jogo)
+{
+    const int botaoDireito = 0 ;
+    const int posSairY = 400;
+    bool  mouseEmSair, continuarRodando;
+    Vector2 posMouse;
+
+    ShowCursor();
+    continuarRodando = jogo->tela == TELADERROTA && !WindowShouldClose();
+
+    while(continuarRodando)
+    {
+        posMouse = GetMousePosition();
+
+        mouseEmSair = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 402 && posMouse.y < 415);
+
+        if(IsMouseButtonPressed(botaoDireito) && mouseEmSair)
+            jogo->tela = TELAINICIO;
+
+        BeginDrawing();
+
+            ClearBackground(BLACK);
+            DrawText(TextFormat("VOCE PERDEU!"), 330 , 200, 50, LIGHTGRAY);
+            DrawText(TextFormat("SAIR"), LARGURA / 2, posSairY, 20, LIGHTGRAY);
+
+        EndDrawing();
+
+        if(WindowShouldClose())
+            jogo->fecharJogo = true;
+        continuarRodando = jogo->tela == TELADERROTA && !jogo->fecharJogo;
+    }
+
+}
+
+void desenharVitoria(Jogo *jogo)
+{
+    const int botaoDireito = 0 ;
+    const int posSairY = 400;
+    bool  mouseEmSair, continuarRodando;
+    Vector2 posMouse;
+
+    ShowCursor();
+    continuarRodando = jogo->tela == TELAVITORIA && !WindowShouldClose();
+
+    while(continuarRodando)
+    {
+        posMouse = GetMousePosition();
+
+        mouseEmSair = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 402 && posMouse.y < 415);
+
+        if(IsMouseButtonPressed(botaoDireito) && mouseEmSair)
+            jogo->tela = TELAINICIO;
+
+        BeginDrawing();
+
+            ClearBackground(BLACK);
+            DrawText(TextFormat("VOCE GANHOU!"), 330 , 200, 50, LIGHTGRAY);
+            DrawText(TextFormat("SAIR"), LARGURA / 2, posSairY, 20, LIGHTGRAY);
+
+        EndDrawing();
+
+        if(WindowShouldClose())
+            jogo->fecharJogo = true;
+        continuarRodando = jogo->tela == TELAVITORIA && !jogo->fecharJogo;
     }
 
 }
@@ -376,16 +455,17 @@ void atualizarJogo(Jogo *jogo)
             if(todasCriaturasColetadas(jogo->mapa.criaturas, jogo->mapa.numeroCriaturas))
             {
                 jogo->fase += 1;
-                printf("%d\n",jogo->fase);
                 passarFase(jogo);
-                desenharJogo(jogo);
+                if(!jogo->venceu)
+                    desenharJogo(jogo);
+                else
+                    jogo->tela = TELAVITORIA;
             }
-
         }
         else
         {
             jogo->gameOver = true;
-            jogo->tela = TELAINICIO;
+            jogo->tela = TELADERROTA;
         }
 
         if(WindowShouldClose())
@@ -451,7 +531,7 @@ void desenharJogo(Jogo *jogo)
         DrawText(TextFormat("Vidas: %i", jogo->mago.vidas), 10, 0, 20, LIGHTGRAY);
         DrawText(TextFormat("Pontos: %i", jogo->mago.pontos), 140, 0, 20, LIGHTGRAY);
         DrawText(TextFormat("Bombas: %i", jogo->mago.quantidadeBombas), 300, 0, 20, LIGHTGRAY);
-
+        DrawText(TextFormat("Fase: %i", jogo->fase), 450, 0, 20, LIGHTGRAY);
 
     EndDrawing();
 }

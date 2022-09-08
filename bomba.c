@@ -3,6 +3,7 @@
 
 #define TEMPOBOMBA 3
 #define LADOS 4
+#define BORDA 1
 #define PAREDE 'W'
 
 bool verificarExplosao(Bomba bomba, double tempo)
@@ -15,22 +16,22 @@ bool verificarExplosao(Bomba bomba, double tempo)
 void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
 {
     int x, y, i;
-    bool perimetroAmplo, perimetroReduzidoX, perimetroReduzidoY;
+    bool perimetroReduzidoX, perimetroReduzidoY;
 
     x = posicaoBomba[0];
     y = posicaoBomba[1];
 
-    perimetroAmplo = (x >= RAIOBOMBA && x <= MAPAX - RAIOBOMBA) && (y >= RAIOBOMBA && y <= MAPAY - RAIOBOMBA);
-    perimetroReduzidoX = !(x >= RAIOBOMBA && x <= MAPAX - RAIOBOMBA);
-    perimetroReduzidoY = !(y >= RAIOBOMBA && y <= MAPAY - RAIOBOMBA);
+    perimetroReduzidoX = !(x >= RAIOBOMBA && x < MAPAX - RAIOBOMBA);
+    perimetroReduzidoY = !(y >= RAIOBOMBA && y < MAPAY - RAIOBOMBA);
 
-    if(perimetroAmplo)
+    if(!perimetroReduzidoX && !perimetroReduzidoY)
     {
         for(i = 0; i < 4; i++)
             perimetroExplosao[i] = RAIOBOMBA;
     }
     else
     {
+        printf("X %d  Y %d  \n", x,y);
         if(perimetroReduzidoX)
         {
             if(perimetroReduzidoY)
@@ -45,11 +46,11 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
                     perimetroExplosao[0] = 2;
                     perimetroExplosao[1] = RAIOBOMBA;
                     break;
-                case MAPAY - 1:
+                case MAPAY - 2:
                     perimetroExplosao[0] = RAIOBOMBA;
                     perimetroExplosao[1] = 1;
                     break;
-                case MAPAY - 2:
+                case MAPAY - 3:
                     perimetroExplosao[0] = RAIOBOMBA;
                     perimetroExplosao[1] = 2;
                     break;
@@ -64,11 +65,11 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
                     perimetroExplosao[2] = RAIOBOMBA;
                     perimetroExplosao[3] = 2;
                     break;
-                case MAPAX - 1:
+                case MAPAX - 2:
                     perimetroExplosao[2] = 1;
                     perimetroExplosao[3] = RAIOBOMBA;
                     break;
-                case MAPAX - 2:
+                case MAPAX - 3:
                     perimetroExplosao[2] = 2;
                     perimetroExplosao[3] = RAIOBOMBA;
                     break;
@@ -88,11 +89,11 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
                     perimetroExplosao[2] = RAIOBOMBA;
                     perimetroExplosao[3] = 2;
                     break;
-                case MAPAX - 1:
+                case MAPAX - 2:
                     perimetroExplosao[2] = 1;
                     perimetroExplosao[3] = RAIOBOMBA;
                     break;
-                case MAPAX - 2:
+                case MAPAX - 3:
                     perimetroExplosao[2] = 2;
                     perimetroExplosao[3] = RAIOBOMBA;
                     break;
@@ -105,10 +106,6 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
             perimetroExplosao[3] = RAIOBOMBA;
             switch(y)
             {
-            case 0:
-                perimetroExplosao[0] = 0;
-                perimetroExplosao[1] = RAIOBOMBA;
-                break;
             case 1:
                 perimetroExplosao[0] = 1;
                 perimetroExplosao[1] = RAIOBOMBA;
@@ -117,11 +114,11 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
                 perimetroExplosao[0] = 2;
                 perimetroExplosao[1] = RAIOBOMBA;
                 break;
-            case MAPAY - 1:
+            case MAPAY - 2:
                 perimetroExplosao[0] = RAIOBOMBA;
                 perimetroExplosao[1] = 1;
                 break;
-            case MAPAY - 2:
+            case MAPAY - 3:
                 perimetroExplosao[0] = RAIOBOMBA;
                 perimetroExplosao[1] = 2;
                 break;

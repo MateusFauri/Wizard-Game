@@ -19,14 +19,15 @@
 #define BAIXO 'B'
 #define ESQUERDA 'E'
 #define DIREITA 'D'
-#define CONVERSORASCII 64
 #define VIDAS 3
 #define BOMBAS 3
+#define TOTALFASES 3
 
 void novoJogo(Jogo *jogo)
 {
     int bomba;
 
+    jogo->totalFases = TOTALFASES;
     jogo->fase = 1;
     jogo->gameOver = false;
     jogo->venceu = false;
@@ -55,20 +56,34 @@ void novoJogo(Jogo *jogo)
 
 void passarFase(Jogo* jogo)
 {
-    if(inicializarMapa(&jogo->mapa, jogo->fase))
+    if(jogo->fase > jogo->totalFases)
+        jogo->venceu = true;
+    else
     {
-        jogo->mago.x = jogo->mago.xInicial = jogo->mapa.posicaoXInicialJogador;
-        jogo->mago.y = jogo->mago.yInicial = jogo->mapa.posicaoYInicialJogador;
+        if(inicializarMapa(&jogo->mapa, jogo->fase))
+        {
+            jogo->mago.x = jogo->mago.xInicial = jogo->mapa.posicaoXInicialJogador;
+            jogo->mago.y = jogo->mago.yInicial = jogo->mapa.posicaoYInicialJogador;
+        }
+         else
+            printf("Falha ao carregar novo mapa!");
     }
-     else
-        printf("Falhou!");
 }
 
 void resetarMapa(Player *mago, Mapa *mapa)
 {
-    int criatura, monstro;
+    int criatura, monstro, bomba;
 
     resetarPersonagem(mago);
+
+    for(bomba = 0; bomba < mago->quantidadeBombas; bomba++)
+    {
+        if(mago->bombas[bomba].ativa)
+        {
+            mago->bombas[bomba].ativa = false;
+            mapa->terreno[mago->bombas[bomba].y][mago->bombas[bomba].x] = ' ';
+        }
+    }
 
     for(criatura = 0; criatura < mapa->numeroCriaturas; criatura++)
         resetarCriatura(&mapa->criaturas[criatura]);

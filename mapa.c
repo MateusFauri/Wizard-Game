@@ -14,7 +14,6 @@
 #define BAIXO 'B'
 #define ESQUERDA 'E'
 #define DIREITA 'D'
-#define ASCII 64
 
 
 bool inicializarMapa(Mapa *mapa, int fase)

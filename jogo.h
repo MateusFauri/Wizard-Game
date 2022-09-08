@@ -5,7 +5,7 @@
 #include "mapa.h"
 
 typedef struct{
-    int fase;
+    int fase, totalFases;
     char tela;
     bool fecharJogo;
     bool gameOver, venceu;
