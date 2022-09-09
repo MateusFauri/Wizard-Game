@@ -4,7 +4,6 @@
 #define TEMPOBOMBA 3
 #define LADOS 4
 #define BORDA 1
-#define PAREDE 'W'
 
 bool verificarExplosao(Bomba bomba, double tempo)
 {
@@ -31,7 +30,6 @@ void verificarPerimetroExplosao(int posicaoBomba[], int perimetroExplosao[])
     }
     else
     {
-        printf("X %d  Y %d  \n", x,y);
         if(perimetroReduzidoX)
         {
             if(perimetroReduzidoY)
@@ -140,8 +138,14 @@ bool explodir(Bomba *bomba, Mapa *mapa, int posMago[])
     {
         for(coluna = bomba->x - perimetroExplosao[3]; coluna <= bomba->x + perimetroExplosao[2]; coluna++)
         {
-            if(mapa->terreno[linha][coluna] != PAREDE)
+            if(mapa->terreno[linha][coluna] == POCAO)
                 mapa->terreno[linha][coluna] = ' ';
+
+            if(mapa->terreno[linha][coluna] == PAREDEDESTRUTIVEL)
+            {
+                mapa->terreno[linha][coluna] = ' ';
+                mapa->paredesDestruidas += 1;
+            }
 
             if(posMago[0] == coluna && posMago[1] == linha)
                 magoExplodido = true;
@@ -149,7 +153,10 @@ bool explodir(Bomba *bomba, Mapa *mapa, int posMago[])
             for(monstro = 0; monstro < mapa->numeroMonstros; monstro++)
             {
                 if(mapa->monstros[monstro].x == coluna && mapa->monstros[monstro].y == linha)
-                    mapa->monstros[monstro].morto = true;
+                    {
+                        mapa->monstros[monstro].morto = true;
+                        mapa->monstrosDestruidos += 1;
+                    }
             }
 
         }

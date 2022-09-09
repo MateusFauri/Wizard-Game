@@ -61,6 +61,7 @@ bool inicializarMapa(Mapa *mapa, int fase)
     }
     mapa->numeroCriaturas = criatura;
     mapa->numeroMonstros = monstro;
+    mapa->monstrosDestruidos = mapa->paredesDestruidas = 0;
 
     return true;
 }
@@ -115,7 +116,6 @@ bool movimentoPossivel(char terreno[][COLUNAS], int destino[])
     return true;
 }
 
-
 char movimentoAleatorio()
 {
     char movimento[] = { CIMA, BAIXO, ESQUERDA, DIREITA};
@@ -125,7 +125,6 @@ char movimentoAleatorio()
 
     return movimento[posicaoAleatoria];
 }
-
 
 bool verificarPosicaoBomba(Mapa mapa, int destino[])
 {

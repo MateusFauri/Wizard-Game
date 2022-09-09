@@ -88,6 +88,7 @@ bool verificarCriatura(Player mago, Criatura criatura);
 // Return: Retorna um booleano caso o mago estiver na mesma posicao que um monstro
 // Description: Verifica se o mago esta na mesma posicao do terreno que um monstro
 bool verificarMonstro(Player mago, Monstro monstro);
+
 // Name: verificarPocao
 // Type: Function
 // Inputs:

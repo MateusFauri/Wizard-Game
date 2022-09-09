@@ -17,32 +17,56 @@ typedef struct{
 // Name: novoJogo
 // Type: Function
 // Inputs:
-//      Jogo *jogo: a referencia para um objeto (assim dizer) jogo
-// Output: Tem muitos.... atualizar isso!
-// Return: Um booleano que informa se conseguimos criar um novo jogo ou nao.
+//      Jogo *jogo
+// Output: Modofica todas as structs para "inicial"
+// Return: None.
 // Description: Inicializar um novo jogo, carregando mapas, personagens, criaturas e monstros.
 void novoJogo(Jogo *jogo);
 
-// Name:
-// Type:
-// Inputs:
-//
-// Output:
-// Return:
-// Description:
-void passarFase(Jogo* jogo);
-
-// Name:
+// Name: passarFase
 // Type: Function
 // Inputs:
-// Output:
-// Return:
-// Description:
+//       Jogo *jogo
+// Output:  Modifica o jogo e o mapa
+// Return:  None.
+// Description: Passa de fase caso houver uma nova, se não modifica o jogo para venceu.
+void passarFase(Jogo* jogo);
+
+// Name: resetarMapa
+// Type: Function
+// Inputs:
+//      Player *mago
+//      Mapa *mapa
+// Output:  Modifica a posicão dos objetos dinamicos do mapa e do jogador.
+// Return:  None.
+// Description: volta a posicão inicial de todas as structs do mapa (objetos dinamicos do mapa) e o a posição inicial do mago também.
 void resetarMapa(Player *mago, Mapa *mapa);
 
+// Name: gameOver
+// Type: Function
+// Inputs:
+//      Jogo *jogo
+// Output: modifica o estado do jogo
+// Return: None.
+// Description: modifica o atributo gameOver do jogo
 void gameOver(Jogo *jogo);
 
+// Name: salvarJogo
+// Type: Function
+// Inputs:
+//      Jogo *jogo
+// Output: um arquivo com todas as informações do jogo salvas.
+// Return: Retornar um booleno caso sucesso da função
+// Description: salva o estado do jogo atual
 bool salvarJogo(Jogo *jogo);
+
+// Name: carregarJogo
+// Type: Function
+// Inputs:
+//      Jogo *jogo
+// Output: muda todos os atributos do jogo e suas structs encadeadas
+// Return: Retornar um booleno caso sucesso da função
+// Description: Le um arquivo salvo para carregar o jogo de onde parou.
 bool carregarJogo(Jogo *jogo);
 
 #endif // JOGOSS_H_INCLUDED
