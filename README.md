@@ -1,4 +1,4 @@
-# -Wizard-game
+# Wizard Game
 Final assignment of the class Algorithm and programming - UFRGS
 
 <h1> Game History</h1>
