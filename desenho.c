@@ -4,6 +4,8 @@
 #include "desenho.h"
 
 #define NUMEROPECAS 50
+#define PATHSAVE 100
+#define BACKSPACE 3
 #define PAREDE 'W'
 #define PAREDEDESTRUTIVEL 'D'
 #define POCAO 'P'
@@ -14,7 +16,6 @@
 #define BAIXO 'B'
 #define ESQUERDA 'E'
 #define DIREITA 'D'
-
 
 
 void desenhar(Jogo *jogo)
@@ -283,14 +284,20 @@ void desenharSalvar(Jogo *jogo)
     const int posSalvarJogoY = 350;
     const int posSairY = 400;
     bool  mouseEmSalvar,mouseEmVoltar, continuarRodando;
+    char key;
+    char path[PATHSAVE] = "Saves/";
+    int tamanhoPath;
     Vector2 posMouse;
 
     ShowCursor();
     continuarRodando = jogo->tela == TELASALVAR && !WindowShouldClose();
+    key = 0;
 
     while(continuarRodando)
     {
         posMouse = GetMousePosition();
+        key = GetKeyPressed();
+        tamanhoPath = strlen(path);
 
         mouseEmSalvar = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 348 && posMouse.y < 366);
         mouseEmVoltar = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 402 && posMouse.y < 415);
@@ -298,7 +305,10 @@ void desenharSalvar(Jogo *jogo)
         if(IsMouseButtonPressed(botaoDireito))
         {
             if(mouseEmSalvar)
-                salvarJogo(jogo);
+            {
+                salvarJogo(jogo, path);
+                jogo->tela = TELAPAUSE;
+            }
 
             if(mouseEmVoltar)
                 jogo->tela = TELAPAUSE;
@@ -308,6 +318,16 @@ void desenharSalvar(Jogo *jogo)
 
             ClearBackground(BLACK);
             DrawText(TextFormat("NOME DO ARQUIVO:"), posX, posNomeArquivoY, 20, LIGHTGRAY);
+
+            if(key != 0)
+            {
+                if(key == BACKSPACE)
+                    path[tamanhoPath - 1] = '\0';
+                else
+                    strcat(path, &key);
+            }
+
+            DrawText(TextFormat("%s", &path[6]), posX + 250, posNomeArquivoY, 20, LIGHTGRAY);
             DrawText(TextFormat("SALVAR"), LARGURA / 2, posSalvarJogoY, 20, LIGHTGRAY);
             DrawText(TextFormat("VOLTAR"), LARGURA / 2, posSairY, 20, LIGHTGRAY);
 

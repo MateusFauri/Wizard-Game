@@ -55,10 +55,11 @@ void gameOver(Jogo *jogo);
 // Type: Function
 // Inputs:
 //      Jogo *jogo
+//      char path[]  Caminho para salvar o arquivo
 // Output: um arquivo com todas as informações do jogo salvas.
 // Return: Retornar um booleno caso sucesso da função
 // Description: salva o estado do jogo atual
-bool salvarJogo(Jogo *jogo);
+bool salvarJogo(Jogo *jogo, char path[]);
 
 // Name: carregarJogo
 // Type: Function

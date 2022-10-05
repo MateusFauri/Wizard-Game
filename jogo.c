@@ -97,18 +97,12 @@ void gameOver(Jogo *jogo)
     jogo->gameOver = true;
 }
 
-bool salvarJogo(Jogo *jogo)
+bool salvarJogo(Jogo *jogo, char path[])
 {
     FILE *salvar;
-    char caminhoCompleto[] = "Saves/";
     char nome[50];
 
-    printf("Digite o nome do Arquivo: ");
-    scanf("%s", &nome);
-
-    strcat(caminhoCompleto,nome);
-
-    salvar = fopen(caminhoCompleto, "wb");
+    salvar = fopen(path, "wb");
 
     if(!salvar)
     {
