@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <dirent.h>
 #include "desenho.h"
 
 #define NUMEROPECAS 50
@@ -61,11 +62,17 @@ void desenharInicio(Jogo *jogo)
     Vector2 posMouse;
     bool mouseEmNovoJogo,mouseEmCarregar, mouseEmSair ,continuarRodando;
 
+    Sound game = LoadSound("Waves/Entrada.wav");
+    PlaySound(game);
+
     ShowCursor();
     continuarRodando = jogo->tela == TELAINICIO && !WindowShouldClose();
 
     while(continuarRodando)
     {
+        if(!IsSoundPlaying(game))
+            PlaySound(game);
+
         posMouse = GetMousePosition();
 
         mouseEmSair = (posMouse.x > 20 && posMouse.x < 66) && (posMouse.y > 400 && posMouse.y < 417);
@@ -77,14 +84,20 @@ void desenharInicio(Jogo *jogo)
             if(mouseEmNovoJogo)
             {
                 novoJogo(jogo);
+                StopSound(game);
                 jogo->tela = TELAJOGO;
             }
 
             if(mouseEmCarregar)
+            {
+                StopSound(game);
                 jogo->tela = TELACARREGAR;
-
+            }
             if(mouseEmSair)
+            {
                 jogo->fecharJogo = true;
+                StopSound(game);
+            }
 
         }
 
@@ -166,6 +179,7 @@ void desenharDerrota(Jogo *jogo)
     bool  mouseEmSair, continuarRodando;
     Vector2 posMouse;
 
+
     ShowCursor();
     continuarRodando = jogo->tela == TELADERROTA && !WindowShouldClose();
 
@@ -199,18 +213,27 @@ void desenharVitoria(Jogo *jogo)
     const int posSairY = 400;
     bool  mouseEmSair, continuarRodando;
     Vector2 posMouse;
+    Sound vitoria = LoadSound("Waves/Win.wav");
+    PlaySound(vitoria);
 
     ShowCursor();
     continuarRodando = jogo->tela == TELAVITORIA && !WindowShouldClose();
 
     while(continuarRodando)
     {
+         if(!IsSoundPlaying(vitoria))
+            PlaySound(vitoria);
+
+
         posMouse = GetMousePosition();
 
         mouseEmSair = (posMouse.x > 540 && posMouse.x < 622) && (posMouse.y > 402 && posMouse.y < 415);
 
         if(IsMouseButtonPressed(botaoDireito) && mouseEmSair)
+        {
             jogo->tela = TELAINICIO;
+            StopSound(vitoria);
+        }
 
         BeginDrawing();
 
@@ -231,14 +254,25 @@ void desenharCarregar(Jogo *jogo)
 {
     const int botaoDireito = 0 ;
     const int posX = 20 ;
-    const int posNomeArquivoY = 150;
     const int posCarregarJogoY = 350;
     const int posSairY = 400;
+    const int arquivo = 20;
+    int posNomeArquivoY = 150;
     bool  mouseEmCarregar, mouseEmVoltar, continuarRodando;
+    DIR *diretorio;
+    struct dirent *entry;
     Vector2 posMouse;
+
+    diretorio = opendir("Saves/");
+    if(!diretorio)
+    {
+        printf("Erro ao abrir os salvamentos\n");
+        return 1;
+    }
 
     ShowCursor();
     continuarRodando = jogo->tela == TELACARREGAR && !WindowShouldClose();
+
 
     while(continuarRodando)
     {
@@ -253,16 +287,25 @@ void desenharCarregar(Jogo *jogo)
             {
                 carregarJogo(jogo);
                 jogo->tela = TELAJOGO;
+                closedir(diretorio);
             }
 
             if(mouseEmVoltar)
+            {
                 jogo->tela = TELAINICIO;
+                closedir(diretorio);
+            }
         }
 
         BeginDrawing();
 
             ClearBackground(BLACK);
-            DrawText(TextFormat("NOME DO ARQUIVO:"), posX, posNomeArquivoY, 20, LIGHTGRAY);
+            while((entry = readdir(diretorio)) != NULL)
+            {
+                printf("%s\n", entry->d_name);
+                DrawText(TextFormat("%s",entry->d_name), posX, posNomeArquivoY, 20, LIGHTGRAY);
+                posNomeArquivoY += arquivo;
+            }
             DrawText(TextFormat("Carregar"), LARGURA / 2, posCarregarJogoY, 20, LIGHTGRAY);
             DrawText(TextFormat("VOLTAR"), LARGURA / 2, posSairY, 20, LIGHTGRAY);
 

@@ -33,10 +33,12 @@ int main(void){
 
     InitWindow(LARGURA, ALTURA, "Jogo");
     SetTargetFPS(TEMPO);
+    InitAudioDevice();
 
     while(!jogo.fecharJogo)
         desenhar(&jogo);
 
+    CloseAudioDevice();
     CloseWindow();
     return 0;
 }
@@ -47,6 +49,13 @@ void atualizarJogo(Jogo *jogo)
     int criatura, monstro, bomba, posMago[2], bufferPontos;
     bool continuarRodando;
     char botaoPressionado;
+    Sound gameMusic = LoadSound("Waves/GameMusic.wav");
+    Sound timeBomb = LoadSound("Waves/Bomba.wav");
+    Sound newLife = LoadSound("Waves/NewLife.wav");
+    Sound newPhase = LoadSound("Waves/NewFase.wav");
+    Sound die = LoadSound("Waves/DEATH.wav");
+    Sound creature = LoadSound("Waves/PegarCriatura.wav");
+    PlaySound(gameMusic);
 
     bufferPontos = 0;
 
@@ -54,6 +63,9 @@ void atualizarJogo(Jogo *jogo)
 
     while(continuarRodando)
     {
+        if(!IsSoundPlaying(gameMusic))
+            PlaySound(gameMusic);
+
         botaoPressionado = GetKeyPressed();
 
         if(verificarPocao(jogo->mago, jogo->mapa.terreno))
@@ -73,6 +85,7 @@ void atualizarJogo(Jogo *jogo)
         for(criatura = 0; criatura < jogo->mapa.numeroCriaturas; criatura++)
             if(verificarCriatura(jogo->mago, jogo->mapa.criaturas[criatura]))
             {
+                PlaySoundMulti(creature);
                 aumentarPontuacao(&jogo->mago, CRIATURACOLETADA);
                 bufferPontos += CRIATURACOLETADA;
                 criaturaColetada(&jogo->mapa.criaturas[criatura]);
@@ -82,10 +95,19 @@ void atualizarJogo(Jogo *jogo)
             if(!jogo->mapa.monstros[monstro].morto)
                 if(verificarMonstro(jogo->mago, jogo->mapa.monstros[monstro]))
                 {
-                    aumentarPontuacao(&jogo->mago, PERDERVIDA);
-                    bufferPontos += PERDERVIDA;
+                    StopSoundMulti();
+                    PlaySoundMulti(die);
+                    if(bufferPontos >= (PERDERVIDA * -1) )
+                    {
+                        aumentarPontuacao(&jogo->mago, PERDERVIDA);
+                        bufferPontos += PERDERVIDA;
+                    }
                     resetarMapa(&jogo->mago, &jogo->mapa);
                 }
+
+        if(botaoPressionado == B)
+            if(colocarBomba(&jogo->mago, &jogo->mapa))
+                PlaySoundMulti(timeBomb);
 
         if(jogo->mago.quantidadeBombas < BOMBAS)
             for(bomba = 0; bomba < jogo->mago.quantidadeBombas; bomba++)
@@ -116,11 +138,10 @@ void atualizarJogo(Jogo *jogo)
                         }
                     }
 
-        if(botaoPressionado == B)
-            colocarBomba(&jogo->mago, &jogo->mapa);
 
         if(bufferPontos >= NOVAVIDA)
         {
+            PlaySoundMulti(newLife);
             jogo->mago.vidas += 1;
             bufferPontos = 0;
         }
@@ -141,16 +162,22 @@ void atualizarJogo(Jogo *jogo)
 
             if(todasCriaturasColetadas(jogo->mapa.criaturas, jogo->mapa.numeroCriaturas))
             {
+                StopSoundMulti();
                 jogo->fase += 1;
+                PlaySound(newPhase);
                 passarFase(jogo);
                 if(!jogo->venceu)
                     desenharJogo(jogo);
                 else
+                {
+                    StopSound(gameMusic);
                     jogo->tela = TELAVITORIA;
+                }
             }
         }
         else
         {
+            StopSound(gameMusic);
             jogo->gameOver = true;
             jogo->tela = TELADERROTA;
         }

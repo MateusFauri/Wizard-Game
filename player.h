@@ -105,9 +105,9 @@ bool verificarPocao(Player mago, char terreno[][MAPAX]);
 //      Player *mago
 //      Mapa *mapa
 // Output:  Modifica o estado do mago, das bomba e do mapa.
-// Return: None.
+// Return: se conseguiu colocar a bomba.
 // Description: Coloca uma bomba no mapa se for possivel (nao estiver em cima de alguma criatura/monstro, ou em na parade)
-void colocarBomba(Player *mago, Mapa *mapa);
+bool colocarBomba(Player *mago, Mapa *mapa);
 
 
 
